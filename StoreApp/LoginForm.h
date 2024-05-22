@@ -180,6 +180,7 @@ namespace StoreApp {
 			this->tbPassword->Location = System::Drawing::Point(47, 125);
 			this->tbPassword->Margin = System::Windows::Forms::Padding(3, 6, 18, 3);
 			this->tbPassword->Name = L"tbPassword";
+			this->tbPassword->PasswordChar = '*';
 			this->tbPassword->Size = System::Drawing::Size(140, 18);
 			this->tbPassword->TabIndex = 7;
 			// 
