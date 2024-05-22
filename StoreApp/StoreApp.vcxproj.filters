@@ -24,12 +24,18 @@
     <ClCompile Include="AdminForm.cpp">
       <Filter>Header Files</Filter>
     </ClCompile>
+    <ClCompile Include="WarehouseForm.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LoginForm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="AdminForm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WarehouseForm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
