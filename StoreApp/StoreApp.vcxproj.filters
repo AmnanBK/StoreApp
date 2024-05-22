@@ -27,6 +27,9 @@
     <ClCompile Include="WarehouseForm.cpp">
       <Filter>Header Files</Filter>
     </ClCompile>
+    <ClCompile Include="UpdateItemForm.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LoginForm.h">
@@ -36,6 +39,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="WarehouseForm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UpdateItemForm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

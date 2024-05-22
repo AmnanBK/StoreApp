@@ -1,6 +1,7 @@
 #include "LoginForm.h"
 #include "AdminForm.h"
 #include "WarehouseForm.h"
+#include "UpdateItemForm.h"
 
 using namespace::System;
 using namespace::System::Windows::Forms;
@@ -15,6 +16,10 @@ void main(array<String^>^ args) {
 	//StoreApp::AdminForm adminForm;
 	//adminForm.ShowDialog();
 
-	StoreApp::WarehouseForm warehouseForm;
-	warehouseForm.ShowDialog();
+	//StoreApp::WarehouseForm warehouseForm;
+	//warehouseForm.ShowDialog();
+
+	StoreApp::UpdateItemForm updateItemForm;
+	updateItemForm.ShowDialog();
+
 }
