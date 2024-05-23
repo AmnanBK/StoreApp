@@ -11,8 +11,8 @@ void main(array<String^>^ args) {
 	Application::EnableVisualStyles();
 	Application::SetCompatibleTextRenderingDefault(false);
 
-	//StoreApp::LoginForm loginForm;
-	//loginForm.ShowDialog();
+	StoreApp::LoginForm loginForm;
+	loginForm.ShowDialog();
 
 	/*StoreApp::AdminForm adminForm;
 	adminForm.ShowDialog();*/
@@ -23,6 +23,6 @@ void main(array<String^>^ args) {
 	//StoreApp::UpdateItemForm updateItemForm;
 	//updateItemForm.ShowDialog();
 
-	StoreApp::CashierForm cashierForm;
-	cashierForm.ShowDialog();
+	//StoreApp::CashierForm cashierForm;
+	//cashierForm.ShowDialog();
 }

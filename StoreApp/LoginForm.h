@@ -8,6 +8,7 @@ namespace StoreApp {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace MySql::Data::MySqlClient;
 
 	/// <summary>
 	/// Summary for LoginForm
@@ -146,6 +147,7 @@ namespace StoreApp {
 			this->btnLogin->TabIndex = 8;
 			this->btnLogin->Text = L"Login";
 			this->btnLogin->UseVisualStyleBackColor = true;
+			this->btnLogin->Click += gcnew System::EventHandler(this, &LoginForm::btnLogin_Click);
 			// 
 			// tbPassword
 			// 
@@ -249,8 +251,11 @@ namespace StoreApp {
 		}
 #pragma endregion
 	public: bool exitProgram = false;
+	public: int switchForm = 0;
 	private: bool dragging;
 	private: Point offset;
+	private: String^ connString = "datasource=127.0.0.1;port=3306;username=root;password=;database=storedb;";
+	private: MySqlConnection^ sqlConn = gcnew MySqlConnection(connString);
 	private: System::Void pnlTop_MouseDown(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) {
 		dragging = true;
 		offset.X = e->X;
@@ -272,5 +277,50 @@ namespace StoreApp {
 		exitProgram = true;
 		Close();
 	}
-};
+	private: System::Void btnLogin_Click(System::Object^ sender, System::EventArgs^ e) {
+		String^ username = tbUsername->Text;
+		String^ password = tbPassword->Text;
+
+		if (username->Length == 0 || password->Length == 0) {
+			MessageBox::Show("Please fill username and password", "Username or Password Empty", MessageBoxButtons::OK);
+			return;
+		}
+
+		try {
+			sqlConn->Open();
+			String^ sqlQuery = "SELECT username, password, role FROM users WHERE username=@username AND password=@password;";
+			MySqlCommand^ sqlComm = gcnew MySqlCommand(sqlQuery, sqlConn);
+			sqlComm->Parameters->AddWithValue("@username", username);
+			sqlComm->Parameters->AddWithValue("@password", password);
+
+			MySqlDataReader^ sqlReader = sqlComm->ExecuteReader();
+			if (sqlReader->Read()) {
+				String^ role = sqlReader->GetString(2);
+				if (role == "Admin") {
+					switchForm = 1;
+					MessageBox::Show("Login as admin", "Login Success", MessageBoxButtons::OK);
+				}
+				else if (role == "Staff Gudang") {
+					switchForm = 2;
+					MessageBox::Show("Login as staff gudang", "Login Success", MessageBoxButtons::OK);
+				}
+				else if (role == "Staff Kasir") {
+					switchForm = 3;
+					MessageBox::Show("Login as staff kasir", "Login Success", MessageBoxButtons::OK);
+				}
+				else {
+					MessageBox::Show("Login as unidentified role", "Login Success", MessageBoxButtons::OK);
+				}
+			}
+			else {
+				MessageBox::Show("Username or password is incorrect", "Login Failed", MessageBoxButtons::OK);
+			}
+			sqlConn->Close();
+			Close();
+		}
+		catch (Exception^ e) {
+			MessageBox::Show(e->Message, "Failed to Connect", MessageBoxButtons::OK);
+		}
+	}
+	};
 }
