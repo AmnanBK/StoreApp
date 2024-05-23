@@ -314,6 +314,8 @@ namespace StoreApp {
 			}
 			else {
 				MessageBox::Show("Username or password is incorrect", "Login Failed", MessageBoxButtons::OK);
+				sqlConn->Close();
+				return;
 			}
 			sqlConn->Close();
 			Close();
