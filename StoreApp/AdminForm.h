@@ -334,6 +334,7 @@ namespace StoreApp {
 			this->btnLogout->TabIndex = 13;
 			this->btnLogout->Text = L"Logout";
 			this->btnLogout->UseVisualStyleBackColor = true;
+			this->btnLogout->Click += gcnew System::EventHandler(this, &AdminForm::btnLogout_Click);
 			// 
 			// AdminForm
 			// 
@@ -369,14 +370,12 @@ namespace StoreApp {
 		offset.X = e->X;
 		offset.Y = e->Y;
 	}
-
 	private: System::Void pnlTop_MouseMove(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) {
 		if (dragging) {
 			Point currentScreenPosition = PointToScreen(Point(e->X, e->Y));
 			Location = Point(currentScreenPosition.X - offset.X, currentScreenPosition.Y - offset.Y);
 		}
 	}
-
 	private: System::Void pnlTop_MouseUp(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) {
 		dragging = false;
 	}
@@ -384,5 +383,10 @@ namespace StoreApp {
 		exitProgram = true;
 		Close();
 	}
-};
+
+	private: System::Void btnLogout_Click(System::Object^ sender, System::EventArgs^ e) {
+		logout = true;
+		Close();
+	}
+	};
 }

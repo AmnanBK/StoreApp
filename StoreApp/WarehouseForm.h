@@ -138,6 +138,7 @@ namespace StoreApp {
 			this->btnLogout->TabIndex = 14;
 			this->btnLogout->Text = L"Logout";
 			this->btnLogout->UseVisualStyleBackColor = true;
+			this->btnLogout->Click += gcnew System::EventHandler(this, &WarehouseForm::btnLogout_Click);
 			// 
 			// pbSearch
 			// 
@@ -302,5 +303,9 @@ namespace StoreApp {
 		exitProgram = true;
 		Close();
 	}
-	};
+	private: System::Void btnLogout_Click(System::Object^ sender, System::EventArgs^ e) {
+		logout = true;
+		Close();
+	}
+};
 }
