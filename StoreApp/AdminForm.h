@@ -8,6 +8,7 @@ namespace StoreApp {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace MySql::Data::MySqlClient;
 
 	/// <summary>
 	/// Summary for AdminForm
@@ -349,6 +350,7 @@ namespace StoreApp {
 			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::None;
 			this->Name = L"AdminForm";
 			this->Text = L"AdminForm";
+			this->Load += gcnew System::EventHandler(this, &AdminForm::AdminForm_Load);
 			this->pnlTop->ResumeLayout(false);
 			this->pnlAdd->ResumeLayout(false);
 			this->pnlAdd->PerformLayout();
@@ -365,6 +367,8 @@ namespace StoreApp {
 	public: bool logout = false;
 	private: bool dragging;
 	private: Point offset;
+	private: String^ connString = "datasource=127.0.0.1;port=3306;username=root;password=;database=storedb;";
+	private: MySqlConnection^ sqlConn = gcnew MySqlConnection(connString);
 	private: System::Void pnlTop_MouseDown(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) {
 		dragging = true;
 		offset.X = e->X;
@@ -388,5 +392,19 @@ namespace StoreApp {
 		logout = true;
 		Close();
 	}
-	};
+	private: System::Void AdminForm_Load(System::Object^ sender, System::EventArgs^ e) {
+		try {
+			sqlConn->Open();
+			String^ sqlQuery = "SELECT username, password, role FROM users;";
+			MySqlDataAdapter^ sqlDataAdapter = gcnew MySqlDataAdapter(sqlQuery, sqlConn);
+			DataTable^ dataTable = gcnew DataTable();
+
+			sqlDataAdapter->Fill(dataTable);
+			dgvUsers->DataSource = dataTable;
+		}
+		catch (Exception^ e) {
+			MessageBox::Show(e->Message, "Failed to Connect", MessageBoxButtons::OK);
+		}
+	}
+};
 }
