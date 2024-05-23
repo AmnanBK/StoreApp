@@ -1,7 +1,6 @@
 #include "LoginForm.h"
 #include "AdminForm.h"
 #include "WarehouseForm.h"
-#include "UpdateItemForm.h"
 #include "CashierForm.h"
 
 using namespace::System;
@@ -11,18 +10,45 @@ void main(array<String^>^ args) {
 	Application::EnableVisualStyles();
 	Application::SetCompatibleTextRenderingDefault(false);
 
-	StoreApp::LoginForm loginForm;
-	loginForm.ShowDialog();
+	while (true) {
+		StoreApp::LoginForm loginForm;
+		loginForm.ShowDialog();
 
-	/*StoreApp::AdminForm adminForm;
-	adminForm.ShowDialog();*/
+		if (loginForm.exitProgram) {
+			break;
+		}
 
-	//StoreApp::WarehouseForm warehouseForm;
-	//warehouseForm.ShowDialog();
+		if (loginForm.switchForm == 1) {
+			StoreApp::AdminForm adminForm;
+			adminForm.ShowDialog();
+			if (adminForm.exitProgram) {
+				break;
+			}
+			if (adminForm.logout) {
+				continue;
+			}
+		}
 
-	//StoreApp::UpdateItemForm updateItemForm;
-	//updateItemForm.ShowDialog();
+		if (loginForm.switchForm == 2) {
+			StoreApp::WarehouseForm warehouseForm;
+			warehouseForm.ShowDialog();
+			if (warehouseForm.exitProgram) {
+				break;
+			}
+			if (warehouseForm.logout) {
+				continue;
+			}
+		}
 
-	//StoreApp::CashierForm cashierForm;
-	//cashierForm.ShowDialog();
+		if (loginForm.switchForm == 3) {
+			StoreApp::CashierForm cashierForm;
+			cashierForm.ShowDialog();
+			if (cashierForm.exitProgram) {
+				break;
+			}
+			if (cashierForm.logout) {
+				continue;
+			}
+		}
+	}
 }

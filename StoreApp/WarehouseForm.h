@@ -278,6 +278,7 @@ namespace StoreApp {
 		}
 #pragma endregion
 	public: bool exitProgram = false;
+	public: bool logout = false;
 	private: bool dragging;
 	private: Point offset;
 	private: System::Void pnlTop_MouseDown(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) {
