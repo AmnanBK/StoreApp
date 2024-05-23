@@ -73,7 +73,7 @@ namespace StoreApp {
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
-		System::ComponentModel::Container ^components;
+		System::ComponentModel::Container^ components;
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -93,12 +93,12 @@ namespace StoreApp {
 			this->lbSumPrice = (gcnew System::Windows::Forms::Label());
 			this->pnlSumPrice = (gcnew System::Windows::Forms::Panel());
 			this->pnlDetail = (gcnew System::Windows::Forms::Panel());
-			this->lbNameItem = (gcnew System::Windows::Forms::Label());
-			this->lbPriceItem = (gcnew System::Windows::Forms::Label());
-			this->btnPrint = (gcnew System::Windows::Forms::Button());
-			this->btnDelete = (gcnew System::Windows::Forms::Button());
-			this->btnAdd = (gcnew System::Windows::Forms::Button());
 			this->nudQty = (gcnew System::Windows::Forms::NumericUpDown());
+			this->btnAdd = (gcnew System::Windows::Forms::Button());
+			this->btnDelete = (gcnew System::Windows::Forms::Button());
+			this->btnPrint = (gcnew System::Windows::Forms::Button());
+			this->lbPriceItem = (gcnew System::Windows::Forms::Label());
+			this->lbNameItem = (gcnew System::Windows::Forms::Label());
 			this->lblTitle = (gcnew System::Windows::Forms::Label());
 			this->pnlTop->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dgvListItem))->BeginInit();
@@ -117,6 +117,9 @@ namespace StoreApp {
 			this->pnlTop->Name = L"pnlTop";
 			this->pnlTop->Size = System::Drawing::Size(800, 25);
 			this->pnlTop->TabIndex = 2;
+			this->pnlTop->MouseDown += gcnew System::Windows::Forms::MouseEventHandler(this, &CashierForm::pnlTop_MouseDown);
+			this->pnlTop->MouseMove += gcnew System::Windows::Forms::MouseEventHandler(this, &CashierForm::pnlTop_MouseMove);
+			this->pnlTop->MouseUp += gcnew System::Windows::Forms::MouseEventHandler(this, &CashierForm::pnlTop_MouseUp);
 			// 
 			// btnExit
 			// 
@@ -130,6 +133,7 @@ namespace StoreApp {
 			this->btnExit->Size = System::Drawing::Size(35, 25);
 			this->btnExit->TabIndex = 0;
 			this->btnExit->UseVisualStyleBackColor = true;
+			this->btnExit->Click += gcnew System::EventHandler(this, &CashierForm::btnExit_Click);
 			// 
 			// btnLogout
 			// 
@@ -232,60 +236,15 @@ namespace StoreApp {
 			this->pnlDetail->Size = System::Drawing::Size(236, 335);
 			this->pnlDetail->TabIndex = 26;
 			// 
-			// lbNameItem
+			// nudQty
 			// 
-			this->lbNameItem->Font = (gcnew System::Drawing::Font(L"Segoe UI", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->nudQty->Font = (gcnew System::Drawing::Font(L"Segoe UI", 11.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->lbNameItem->Location = System::Drawing::Point(0, 31);
-			this->lbNameItem->Margin = System::Windows::Forms::Padding(3, 20, 3, 0);
-			this->lbNameItem->MaximumSize = System::Drawing::Size(236, 65);
-			this->lbNameItem->Name = L"lbNameItem";
-			this->lbNameItem->Size = System::Drawing::Size(236, 60);
-			this->lbNameItem->TabIndex = 27;
-			this->lbNameItem->Text = L"Kopi Susu abc 500 ml tanpa gula";
-			this->lbNameItem->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
-			// 
-			// lbPriceItem
-			// 
-			this->lbPriceItem->Font = (gcnew System::Drawing::Font(L"Segoe UI", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->lbPriceItem->Location = System::Drawing::Point(0, 111);
-			this->lbPriceItem->Margin = System::Windows::Forms::Padding(3, 20, 3, 0);
-			this->lbPriceItem->Name = L"lbPriceItem";
-			this->lbPriceItem->Size = System::Drawing::Size(236, 30);
-			this->lbPriceItem->TabIndex = 27;
-			this->lbPriceItem->Text = L"100000";
-			this->lbPriceItem->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
-			// 
-			// btnPrint
-			// 
-			this->btnPrint->FlatAppearance->MouseDownBackColor = System::Drawing::Color::DarkGray;
-			this->btnPrint->FlatAppearance->MouseOverBackColor = System::Drawing::Color::LightGray;
-			this->btnPrint->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			this->btnPrint->Font = (gcnew System::Drawing::Font(L"Segoe UI", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->btnPrint->Location = System::Drawing::Point(44, 300);
-			this->btnPrint->Margin = System::Windows::Forms::Padding(20, 5, 5, 10);
-			this->btnPrint->Name = L"btnPrint";
-			this->btnPrint->Size = System::Drawing::Size(148, 35);
-			this->btnPrint->TabIndex = 27;
-			this->btnPrint->Text = L"Print";
-			this->btnPrint->UseVisualStyleBackColor = true;
-			// 
-			// btnDelete
-			// 
-			this->btnDelete->FlatAppearance->MouseDownBackColor = System::Drawing::Color::DarkGray;
-			this->btnDelete->FlatAppearance->MouseOverBackColor = System::Drawing::Color::LightGray;
-			this->btnDelete->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			this->btnDelete->Font = (gcnew System::Drawing::Font(L"Segoe UI", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->btnDelete->Location = System::Drawing::Point(44, 250);
-			this->btnDelete->Margin = System::Windows::Forms::Padding(20, 5, 5, 10);
-			this->btnDelete->Name = L"btnDelete";
-			this->btnDelete->Size = System::Drawing::Size(148, 35);
-			this->btnDelete->TabIndex = 28;
-			this->btnDelete->Text = L"Delete";
-			this->btnDelete->UseVisualStyleBackColor = true;
+			this->nudQty->Location = System::Drawing::Point(44, 158);
+			this->nudQty->Margin = System::Windows::Forms::Padding(3, 3, 3, 10);
+			this->nudQty->Name = L"nudQty";
+			this->nudQty->Size = System::Drawing::Size(148, 27);
+			this->nudQty->TabIndex = 30;
 			// 
 			// btnAdd
 			// 
@@ -302,15 +261,60 @@ namespace StoreApp {
 			this->btnAdd->Text = L"Add";
 			this->btnAdd->UseVisualStyleBackColor = true;
 			// 
-			// nudQty
+			// btnDelete
 			// 
-			this->nudQty->Font = (gcnew System::Drawing::Font(L"Segoe UI", 11.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->btnDelete->FlatAppearance->MouseDownBackColor = System::Drawing::Color::DarkGray;
+			this->btnDelete->FlatAppearance->MouseOverBackColor = System::Drawing::Color::LightGray;
+			this->btnDelete->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+			this->btnDelete->Font = (gcnew System::Drawing::Font(L"Segoe UI", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->nudQty->Location = System::Drawing::Point(44, 158);
-			this->nudQty->Margin = System::Windows::Forms::Padding(3, 3, 3, 10);
-			this->nudQty->Name = L"nudQty";
-			this->nudQty->Size = System::Drawing::Size(148, 27);
-			this->nudQty->TabIndex = 30;
+			this->btnDelete->Location = System::Drawing::Point(44, 250);
+			this->btnDelete->Margin = System::Windows::Forms::Padding(20, 5, 5, 10);
+			this->btnDelete->Name = L"btnDelete";
+			this->btnDelete->Size = System::Drawing::Size(148, 35);
+			this->btnDelete->TabIndex = 28;
+			this->btnDelete->Text = L"Delete";
+			this->btnDelete->UseVisualStyleBackColor = true;
+			// 
+			// btnPrint
+			// 
+			this->btnPrint->FlatAppearance->MouseDownBackColor = System::Drawing::Color::DarkGray;
+			this->btnPrint->FlatAppearance->MouseOverBackColor = System::Drawing::Color::LightGray;
+			this->btnPrint->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+			this->btnPrint->Font = (gcnew System::Drawing::Font(L"Segoe UI", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->btnPrint->Location = System::Drawing::Point(44, 300);
+			this->btnPrint->Margin = System::Windows::Forms::Padding(20, 5, 5, 10);
+			this->btnPrint->Name = L"btnPrint";
+			this->btnPrint->Size = System::Drawing::Size(148, 35);
+			this->btnPrint->TabIndex = 27;
+			this->btnPrint->Text = L"Print";
+			this->btnPrint->UseVisualStyleBackColor = true;
+			// 
+			// lbPriceItem
+			// 
+			this->lbPriceItem->Font = (gcnew System::Drawing::Font(L"Segoe UI", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->lbPriceItem->Location = System::Drawing::Point(0, 111);
+			this->lbPriceItem->Margin = System::Windows::Forms::Padding(3, 20, 3, 0);
+			this->lbPriceItem->Name = L"lbPriceItem";
+			this->lbPriceItem->Size = System::Drawing::Size(236, 30);
+			this->lbPriceItem->TabIndex = 27;
+			this->lbPriceItem->Text = L"100000";
+			this->lbPriceItem->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
+			// 
+			// lbNameItem
+			// 
+			this->lbNameItem->Font = (gcnew System::Drawing::Font(L"Segoe UI", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->lbNameItem->Location = System::Drawing::Point(0, 31);
+			this->lbNameItem->Margin = System::Windows::Forms::Padding(3, 20, 3, 0);
+			this->lbNameItem->MaximumSize = System::Drawing::Size(236, 65);
+			this->lbNameItem->Name = L"lbNameItem";
+			this->lbNameItem->Size = System::Drawing::Size(236, 60);
+			this->lbNameItem->TabIndex = 27;
+			this->lbNameItem->Text = L"Kopi Susu abc 500 ml tanpa gula";
+			this->lbNameItem->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
 			// 
 			// lblTitle
 			// 
@@ -352,5 +356,29 @@ namespace StoreApp {
 
 		}
 #pragma endregion
+	public: bool exitProgram = false;
+	private: bool dragging;
+	private: Point offset;
+	private: System::Void pnlTop_MouseDown(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) {
+		dragging = true;
+		offset.X = e->X;
+		offset.Y = e->Y;
+	}
+
+	private: System::Void pnlTop_MouseMove(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) {
+		if (dragging) {
+			Point currentScreenPosition = PointToScreen(Point(e->X, e->Y));
+			Location = Point(currentScreenPosition.X - offset.X, currentScreenPosition.Y - offset.Y);
+		}
+	}
+
+	private: System::Void pnlTop_MouseUp(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) {
+		dragging = false;
+	}
+
+	private: System::Void btnExit_Click(System::Object^ sender, System::EventArgs^ e) {
+		exitProgram = true;
+		Close();
+	}
 	};
 }

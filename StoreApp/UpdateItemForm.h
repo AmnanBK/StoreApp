@@ -92,6 +92,9 @@ namespace StoreApp {
 			this->pnlTop->Name = L"pnlTop";
 			this->pnlTop->Size = System::Drawing::Size(300, 25);
 			this->pnlTop->TabIndex = 1;
+			this->pnlTop->MouseDown += gcnew System::Windows::Forms::MouseEventHandler(this, &UpdateItemForm::pnlTop_MouseDown);
+			this->pnlTop->MouseMove += gcnew System::Windows::Forms::MouseEventHandler(this, &UpdateItemForm::pnlTop_MouseMove);
+			this->pnlTop->MouseUp += gcnew System::Windows::Forms::MouseEventHandler(this, &UpdateItemForm::pnlTop_MouseUp);
 			// 
 			// pnlAdd
 			// 
@@ -240,5 +243,23 @@ namespace StoreApp {
 
 		}
 #pragma endregion
-	};
+	private: bool dragging;
+	private: Point offset;
+	private: System::Void pnlTop_MouseDown(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) {
+		dragging = true;
+		offset.X = e->X;
+		offset.Y = e->Y;
+	}
+
+	private: System::Void pnlTop_MouseMove(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) {
+		if (dragging) {
+			Point currentScreenPosition = PointToScreen(Point(e->X, e->Y));
+			Location = Point(currentScreenPosition.X - offset.X, currentScreenPosition.Y - offset.Y);
+		}
+	}
+
+	private: System::Void pnlTop_MouseUp(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) {
+		dragging = false;
+	}
+};
 }

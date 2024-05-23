@@ -14,8 +14,8 @@ void main(array<String^>^ args) {
 	//StoreApp::LoginForm loginForm;
 	//loginForm.ShowDialog();
 
-	//StoreApp::AdminForm adminForm;
-	//adminForm.ShowDialog();
+	/*StoreApp::AdminForm adminForm;
+	adminForm.ShowDialog();*/
 
 	//StoreApp::WarehouseForm warehouseForm;
 	//warehouseForm.ShowDialog();

@@ -62,7 +62,7 @@ namespace StoreApp {
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
-		System::ComponentModel::Container ^components;
+		System::ComponentModel::Container^ components;
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -107,6 +107,9 @@ namespace StoreApp {
 			this->pnlTop->Name = L"pnlTop";
 			this->pnlTop->Size = System::Drawing::Size(650, 25);
 			this->pnlTop->TabIndex = 1;
+			this->pnlTop->MouseDown += gcnew System::Windows::Forms::MouseEventHandler(this, &AdminForm::pnlTop_MouseDown);
+			this->pnlTop->MouseMove += gcnew System::Windows::Forms::MouseEventHandler(this, &AdminForm::pnlTop_MouseMove);
+			this->pnlTop->MouseUp += gcnew System::Windows::Forms::MouseEventHandler(this, &AdminForm::pnlTop_MouseUp);
 			// 
 			// btnExit
 			// 
@@ -120,6 +123,7 @@ namespace StoreApp {
 			this->btnExit->Size = System::Drawing::Size(35, 25);
 			this->btnExit->TabIndex = 0;
 			this->btnExit->UseVisualStyleBackColor = true;
+			this->btnExit->Click += gcnew System::EventHandler(this, &AdminForm::btnExit_Click);
 			// 
 			// pnlAdd
 			// 
@@ -356,5 +360,28 @@ namespace StoreApp {
 
 		}
 #pragma endregion
-	};
+	public: bool exitProgram = false;
+	private: bool dragging;
+	private: Point offset;
+	private: System::Void pnlTop_MouseDown(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) {
+		dragging = true;
+		offset.X = e->X;
+		offset.Y = e->Y;
+	}
+
+	private: System::Void pnlTop_MouseMove(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) {
+		if (dragging) {
+			Point currentScreenPosition = PointToScreen(Point(e->X, e->Y));
+			Location = Point(currentScreenPosition.X - offset.X, currentScreenPosition.Y - offset.Y);
+		}
+	}
+
+	private: System::Void pnlTop_MouseUp(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) {
+		dragging = false;
+	}
+	private: System::Void btnExit_Click(System::Object^ sender, System::EventArgs^ e) {
+		exitProgram = true;
+		Close();
+	}
+};
 }
