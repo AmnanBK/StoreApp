@@ -39,17 +39,20 @@ namespace StoreApp {
 
 	private: System::Windows::Forms::Button^ btnExit;
 	private: System::Windows::Forms::Panel^ pnlLogin;
+	private: System::Windows::Forms::Label^ lbTitle;
+	private: System::Windows::Forms::Label^ lbUsername;
 
-	private: System::Windows::Forms::Label^ lblTitle;
 
-	private: System::Windows::Forms::Label^ lblUsername;
+
+
 	private: System::Windows::Forms::TextBox^ tbUsername;
 
 	private: System::Windows::Forms::PictureBox^ pbUsername;
 	private: System::Windows::Forms::TextBox^ tbPassword;
 
 	private: System::Windows::Forms::PictureBox^ pbPassword;
-	private: System::Windows::Forms::Label^ lblPassword;
+	private: System::Windows::Forms::Label^ lbPassword;
+
 	private: System::Windows::Forms::Button^ btnLogin;
 	protected:
 
@@ -73,18 +76,18 @@ namespace StoreApp {
 			this->pnlTop = (gcnew System::Windows::Forms::Panel());
 			this->btnExit = (gcnew System::Windows::Forms::Button());
 			this->pnlLogin = (gcnew System::Windows::Forms::Panel());
-			this->lblTitle = (gcnew System::Windows::Forms::Label());
-			this->lblUsername = (gcnew System::Windows::Forms::Label());
-			this->pbUsername = (gcnew System::Windows::Forms::PictureBox());
-			this->tbUsername = (gcnew System::Windows::Forms::TextBox());
+			this->btnLogin = (gcnew System::Windows::Forms::Button());
 			this->tbPassword = (gcnew System::Windows::Forms::TextBox());
 			this->pbPassword = (gcnew System::Windows::Forms::PictureBox());
-			this->lblPassword = (gcnew System::Windows::Forms::Label());
-			this->btnLogin = (gcnew System::Windows::Forms::Button());
+			this->lbPassword = (gcnew System::Windows::Forms::Label());
+			this->tbUsername = (gcnew System::Windows::Forms::TextBox());
+			this->pbUsername = (gcnew System::Windows::Forms::PictureBox());
+			this->lbUsername = (gcnew System::Windows::Forms::Label());
+			this->lbTitle = (gcnew System::Windows::Forms::Label());
 			this->pnlTop->SuspendLayout();
 			this->pnlLogin->SuspendLayout();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pbUsername))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pbPassword))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pbUsername))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// pnlTop
@@ -116,60 +119,29 @@ namespace StoreApp {
 			this->pnlLogin->Controls->Add(this->btnLogin);
 			this->pnlLogin->Controls->Add(this->tbPassword);
 			this->pnlLogin->Controls->Add(this->pbPassword);
-			this->pnlLogin->Controls->Add(this->lblPassword);
+			this->pnlLogin->Controls->Add(this->lbPassword);
 			this->pnlLogin->Controls->Add(this->tbUsername);
 			this->pnlLogin->Controls->Add(this->pbUsername);
-			this->pnlLogin->Controls->Add(this->lblUsername);
-			this->pnlLogin->Controls->Add(this->lblTitle);
+			this->pnlLogin->Controls->Add(this->lbUsername);
+			this->pnlLogin->Controls->Add(this->lbTitle);
 			this->pnlLogin->Location = System::Drawing::Point(12, 53);
 			this->pnlLogin->Name = L"pnlLogin";
 			this->pnlLogin->Size = System::Drawing::Size(225, 200);
 			this->pnlLogin->TabIndex = 1;
 			// 
-			// lblTitle
+			// btnLogin
 			// 
-			this->lblTitle->AutoSize = true;
-			this->lblTitle->Font = (gcnew System::Drawing::Font(L"Segoe UI", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->btnLogin->FlatAppearance->MouseDownBackColor = System::Drawing::Color::DarkGray;
+			this->btnLogin->FlatAppearance->MouseOverBackColor = System::Drawing::Color::LightGray;
+			this->btnLogin->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+			this->btnLogin->Font = (gcnew System::Drawing::Font(L"Segoe UI", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->lblTitle->Location = System::Drawing::Point(75, 11);
-			this->lblTitle->Name = L"lblTitle";
-			this->lblTitle->Size = System::Drawing::Size(74, 30);
-			this->lblTitle->TabIndex = 0;
-			this->lblTitle->Text = L"LOGIN";
-			// 
-			// lblUsername
-			// 
-			this->lblUsername->AutoSize = true;
-			this->lblUsername->Font = (gcnew System::Drawing::Font(L"Segoe UI", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->lblUsername->Location = System::Drawing::Point(15, 50);
-			this->lblUsername->Name = L"lblUsername";
-			this->lblUsername->Size = System::Drawing::Size(67, 17);
-			this->lblUsername->TabIndex = 1;
-			this->lblUsername->Text = L"Username";
-			// 
-			// pbUsername
-			// 
-			this->pbUsername->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pbUsername.BackgroundImage")));
-			this->pbUsername->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Zoom;
-			this->pbUsername->Location = System::Drawing::Point(18, 73);
-			this->pbUsername->Margin = System::Windows::Forms::Padding(3, 6, 6, 3);
-			this->pbUsername->Name = L"pbUsername";
-			this->pbUsername->Size = System::Drawing::Size(20, 20);
-			this->pbUsername->TabIndex = 3;
-			this->pbUsername->TabStop = false;
-			// 
-			// tbUsername
-			// 
-			this->tbUsername->BackColor = System::Drawing::Color::White;
-			this->tbUsername->BorderStyle = System::Windows::Forms::BorderStyle::None;
-			this->tbUsername->Font = (gcnew System::Drawing::Font(L"Segoe UI", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->tbUsername->Location = System::Drawing::Point(47, 73);
-			this->tbUsername->Margin = System::Windows::Forms::Padding(3, 6, 18, 3);
-			this->tbUsername->Name = L"tbUsername";
-			this->tbUsername->Size = System::Drawing::Size(140, 18);
-			this->tbUsername->TabIndex = 4;
+			this->btnLogin->Location = System::Drawing::Point(74, 161);
+			this->btnLogin->Name = L"btnLogin";
+			this->btnLogin->Size = System::Drawing::Size(76, 35);
+			this->btnLogin->TabIndex = 8;
+			this->btnLogin->Text = L"Login";
+			this->btnLogin->UseVisualStyleBackColor = true;
 			// 
 			// tbPassword
 			// 
@@ -195,30 +167,61 @@ namespace StoreApp {
 			this->pbPassword->TabIndex = 6;
 			this->pbPassword->TabStop = false;
 			// 
-			// lblPassword
+			// lbPassword
 			// 
-			this->lblPassword->AutoSize = true;
-			this->lblPassword->Font = (gcnew System::Drawing::Font(L"Segoe UI", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->lbPassword->AutoSize = true;
+			this->lbPassword->Font = (gcnew System::Drawing::Font(L"Segoe UI", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->lblPassword->Location = System::Drawing::Point(15, 102);
-			this->lblPassword->Name = L"lblPassword";
-			this->lblPassword->Size = System::Drawing::Size(64, 17);
-			this->lblPassword->TabIndex = 5;
-			this->lblPassword->Text = L"Password";
+			this->lbPassword->Location = System::Drawing::Point(15, 102);
+			this->lbPassword->Name = L"lbPassword";
+			this->lbPassword->Size = System::Drawing::Size(64, 17);
+			this->lbPassword->TabIndex = 5;
+			this->lbPassword->Text = L"Password";
 			// 
-			// btnLogin
+			// tbUsername
 			// 
-			this->btnLogin->FlatAppearance->MouseDownBackColor = System::Drawing::Color::DarkGray;
-			this->btnLogin->FlatAppearance->MouseOverBackColor = System::Drawing::Color::LightGray;
-			this->btnLogin->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			this->btnLogin->Font = (gcnew System::Drawing::Font(L"Segoe UI", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->tbUsername->BackColor = System::Drawing::Color::White;
+			this->tbUsername->BorderStyle = System::Windows::Forms::BorderStyle::None;
+			this->tbUsername->Font = (gcnew System::Drawing::Font(L"Segoe UI", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->btnLogin->Location = System::Drawing::Point(74, 161);
-			this->btnLogin->Name = L"btnLogin";
-			this->btnLogin->Size = System::Drawing::Size(76, 35);
-			this->btnLogin->TabIndex = 8;
-			this->btnLogin->Text = L"Login";
-			this->btnLogin->UseVisualStyleBackColor = true;
+			this->tbUsername->Location = System::Drawing::Point(47, 73);
+			this->tbUsername->Margin = System::Windows::Forms::Padding(3, 6, 18, 3);
+			this->tbUsername->Name = L"tbUsername";
+			this->tbUsername->Size = System::Drawing::Size(140, 18);
+			this->tbUsername->TabIndex = 4;
+			// 
+			// pbUsername
+			// 
+			this->pbUsername->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pbUsername.BackgroundImage")));
+			this->pbUsername->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Zoom;
+			this->pbUsername->Location = System::Drawing::Point(18, 73);
+			this->pbUsername->Margin = System::Windows::Forms::Padding(3, 6, 6, 3);
+			this->pbUsername->Name = L"pbUsername";
+			this->pbUsername->Size = System::Drawing::Size(20, 20);
+			this->pbUsername->TabIndex = 3;
+			this->pbUsername->TabStop = false;
+			// 
+			// lbUsername
+			// 
+			this->lbUsername->AutoSize = true;
+			this->lbUsername->Font = (gcnew System::Drawing::Font(L"Segoe UI", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->lbUsername->Location = System::Drawing::Point(15, 50);
+			this->lbUsername->Name = L"lbUsername";
+			this->lbUsername->Size = System::Drawing::Size(67, 17);
+			this->lbUsername->TabIndex = 1;
+			this->lbUsername->Text = L"Username";
+			// 
+			// lbTitle
+			// 
+			this->lbTitle->AutoSize = true;
+			this->lbTitle->Font = (gcnew System::Drawing::Font(L"Segoe UI", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->lbTitle->Location = System::Drawing::Point(75, 11);
+			this->lbTitle->Name = L"lbTitle";
+			this->lbTitle->Size = System::Drawing::Size(74, 30);
+			this->lbTitle->TabIndex = 0;
+			this->lbTitle->Text = L"LOGIN";
 			// 
 			// LoginForm
 			// 
@@ -235,8 +238,8 @@ namespace StoreApp {
 			this->pnlTop->ResumeLayout(false);
 			this->pnlLogin->ResumeLayout(false);
 			this->pnlLogin->PerformLayout();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pbUsername))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pbPassword))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pbUsername))->EndInit();
 			this->ResumeLayout(false);
 
 		}

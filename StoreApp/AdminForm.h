@@ -42,11 +42,14 @@ namespace StoreApp {
 	private: System::Windows::Forms::Button^ btnLogin;
 	private: System::Windows::Forms::TextBox^ tbPassword;
 	private: System::Windows::Forms::PictureBox^ pbPassword;
-	private: System::Windows::Forms::Label^ lblPassword;
+	private: System::Windows::Forms::Label^ lbPassword;
+
 	private: System::Windows::Forms::TextBox^ tbUsername;
 	private: System::Windows::Forms::PictureBox^ pbUsername;
-	private: System::Windows::Forms::Label^ lblUsername;
-	private: System::Windows::Forms::Label^ lblTitle;
+	private: System::Windows::Forms::Label^ lbUsername;
+
+	private: System::Windows::Forms::Label^ lbTitle;
+
 	private: System::Windows::Forms::RadioButton^ rbGudang;
 	private: System::Windows::Forms::Label^ lbRole;
 	private: System::Windows::Forms::RadioButton^ rbKasir;
@@ -72,17 +75,17 @@ namespace StoreApp {
 			this->pnlTop = (gcnew System::Windows::Forms::Panel());
 			this->btnExit = (gcnew System::Windows::Forms::Button());
 			this->pnlAdd = (gcnew System::Windows::Forms::Panel());
+			this->lbRole = (gcnew System::Windows::Forms::Label());
+			this->rbKasir = (gcnew System::Windows::Forms::RadioButton());
+			this->rbGudang = (gcnew System::Windows::Forms::RadioButton());
 			this->btnLogin = (gcnew System::Windows::Forms::Button());
 			this->tbPassword = (gcnew System::Windows::Forms::TextBox());
 			this->pbPassword = (gcnew System::Windows::Forms::PictureBox());
-			this->lblPassword = (gcnew System::Windows::Forms::Label());
+			this->lbPassword = (gcnew System::Windows::Forms::Label());
 			this->tbUsername = (gcnew System::Windows::Forms::TextBox());
 			this->pbUsername = (gcnew System::Windows::Forms::PictureBox());
-			this->lblUsername = (gcnew System::Windows::Forms::Label());
-			this->lblTitle = (gcnew System::Windows::Forms::Label());
-			this->rbGudang = (gcnew System::Windows::Forms::RadioButton());
-			this->rbKasir = (gcnew System::Windows::Forms::RadioButton());
-			this->lbRole = (gcnew System::Windows::Forms::Label());
+			this->lbUsername = (gcnew System::Windows::Forms::Label());
+			this->lbTitle = (gcnew System::Windows::Forms::Label());
 			this->dgvUsers = (gcnew System::Windows::Forms::DataGridView());
 			this->btnDelete = (gcnew System::Windows::Forms::Button());
 			this->pnlList = (gcnew System::Windows::Forms::Panel());
@@ -127,15 +130,54 @@ namespace StoreApp {
 			this->pnlAdd->Controls->Add(this->btnLogin);
 			this->pnlAdd->Controls->Add(this->tbPassword);
 			this->pnlAdd->Controls->Add(this->pbPassword);
-			this->pnlAdd->Controls->Add(this->lblPassword);
+			this->pnlAdd->Controls->Add(this->lbPassword);
 			this->pnlAdd->Controls->Add(this->tbUsername);
 			this->pnlAdd->Controls->Add(this->pbUsername);
-			this->pnlAdd->Controls->Add(this->lblUsername);
+			this->pnlAdd->Controls->Add(this->lbUsername);
 			this->pnlAdd->Location = System::Drawing::Point(24, 78);
 			this->pnlAdd->Margin = System::Windows::Forms::Padding(15, 15, 20, 15);
 			this->pnlAdd->Name = L"pnlAdd";
 			this->pnlAdd->Size = System::Drawing::Size(250, 265);
 			this->pnlAdd->TabIndex = 2;
+			// 
+			// lbRole
+			// 
+			this->lbRole->AutoSize = true;
+			this->lbRole->Font = (gcnew System::Drawing::Font(L"Segoe UI", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->lbRole->Location = System::Drawing::Point(15, 143);
+			this->lbRole->Name = L"lbRole";
+			this->lbRole->Size = System::Drawing::Size(34, 17);
+			this->lbRole->TabIndex = 11;
+			this->lbRole->Text = L"Role";
+			// 
+			// rbKasir
+			// 
+			this->rbKasir->AutoSize = true;
+			this->rbKasir->Font = (gcnew System::Drawing::Font(L"Segoe UI", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->rbKasir->Location = System::Drawing::Point(147, 166);
+			this->rbKasir->Margin = System::Windows::Forms::Padding(3, 6, 3, 3);
+			this->rbKasir->Name = L"rbKasir";
+			this->rbKasir->Size = System::Drawing::Size(85, 21);
+			this->rbKasir->TabIndex = 10;
+			this->rbKasir->TabStop = true;
+			this->rbKasir->Text = L"Staff Kasir";
+			this->rbKasir->UseVisualStyleBackColor = true;
+			// 
+			// rbGudang
+			// 
+			this->rbGudang->AutoSize = true;
+			this->rbGudang->Font = (gcnew System::Drawing::Font(L"Segoe UI", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->rbGudang->Location = System::Drawing::Point(18, 166);
+			this->rbGudang->Margin = System::Windows::Forms::Padding(3, 6, 3, 3);
+			this->rbGudang->Name = L"rbGudang";
+			this->rbGudang->Size = System::Drawing::Size(102, 21);
+			this->rbGudang->TabIndex = 9;
+			this->rbGudang->TabStop = true;
+			this->rbGudang->Text = L"Staff Gudang";
+			this->rbGudang->UseVisualStyleBackColor = true;
 			// 
 			// btnLogin
 			// 
@@ -176,16 +218,16 @@ namespace StoreApp {
 			this->pbPassword->TabIndex = 6;
 			this->pbPassword->TabStop = false;
 			// 
-			// lblPassword
+			// lbPassword
 			// 
-			this->lblPassword->AutoSize = true;
-			this->lblPassword->Font = (gcnew System::Drawing::Font(L"Segoe UI", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->lbPassword->AutoSize = true;
+			this->lbPassword->Font = (gcnew System::Drawing::Font(L"Segoe UI", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->lblPassword->Location = System::Drawing::Point(15, 86);
-			this->lblPassword->Name = L"lblPassword";
-			this->lblPassword->Size = System::Drawing::Size(64, 17);
-			this->lblPassword->TabIndex = 5;
-			this->lblPassword->Text = L"Password";
+			this->lbPassword->Location = System::Drawing::Point(15, 86);
+			this->lbPassword->Name = L"lbPassword";
+			this->lbPassword->Size = System::Drawing::Size(64, 17);
+			this->lbPassword->TabIndex = 5;
+			this->lbPassword->Text = L"Password";
 			// 
 			// tbUsername
 			// 
@@ -210,67 +252,28 @@ namespace StoreApp {
 			this->pbUsername->TabIndex = 3;
 			this->pbUsername->TabStop = false;
 			// 
-			// lblUsername
+			// lbUsername
 			// 
-			this->lblUsername->AutoSize = true;
-			this->lblUsername->Font = (gcnew System::Drawing::Font(L"Segoe UI", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->lbUsername->AutoSize = true;
+			this->lbUsername->Font = (gcnew System::Drawing::Font(L"Segoe UI", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->lblUsername->Location = System::Drawing::Point(15, 30);
-			this->lblUsername->Name = L"lblUsername";
-			this->lblUsername->Size = System::Drawing::Size(67, 17);
-			this->lblUsername->TabIndex = 1;
-			this->lblUsername->Text = L"Username";
+			this->lbUsername->Location = System::Drawing::Point(15, 30);
+			this->lbUsername->Name = L"lbUsername";
+			this->lbUsername->Size = System::Drawing::Size(67, 17);
+			this->lbUsername->TabIndex = 1;
+			this->lbUsername->Text = L"Username";
 			// 
-			// lblTitle
+			// lbTitle
 			// 
-			this->lblTitle->AutoSize = true;
-			this->lblTitle->Font = (gcnew System::Drawing::Font(L"Segoe UI", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->lbTitle->AutoSize = true;
+			this->lbTitle->Font = (gcnew System::Drawing::Font(L"Segoe UI", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->lblTitle->Location = System::Drawing::Point(258, 48);
-			this->lblTitle->Margin = System::Windows::Forms::Padding(3, 20, 3, 20);
-			this->lblTitle->Name = L"lblTitle";
-			this->lblTitle->Size = System::Drawing::Size(134, 30);
-			this->lblTitle->TabIndex = 0;
-			this->lblTitle->Text = L"Register User";
-			// 
-			// rbGudang
-			// 
-			this->rbGudang->AutoSize = true;
-			this->rbGudang->Font = (gcnew System::Drawing::Font(L"Segoe UI", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->rbGudang->Location = System::Drawing::Point(18, 166);
-			this->rbGudang->Margin = System::Windows::Forms::Padding(3, 6, 3, 3);
-			this->rbGudang->Name = L"rbGudang";
-			this->rbGudang->Size = System::Drawing::Size(102, 21);
-			this->rbGudang->TabIndex = 9;
-			this->rbGudang->TabStop = true;
-			this->rbGudang->Text = L"Staff Gudang";
-			this->rbGudang->UseVisualStyleBackColor = true;
-			// 
-			// rbKasir
-			// 
-			this->rbKasir->AutoSize = true;
-			this->rbKasir->Font = (gcnew System::Drawing::Font(L"Segoe UI", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->rbKasir->Location = System::Drawing::Point(147, 166);
-			this->rbKasir->Margin = System::Windows::Forms::Padding(3, 6, 3, 3);
-			this->rbKasir->Name = L"rbKasir";
-			this->rbKasir->Size = System::Drawing::Size(85, 21);
-			this->rbKasir->TabIndex = 10;
-			this->rbKasir->TabStop = true;
-			this->rbKasir->Text = L"Staff Kasir";
-			this->rbKasir->UseVisualStyleBackColor = true;
-			// 
-			// lbRole
-			// 
-			this->lbRole->AutoSize = true;
-			this->lbRole->Font = (gcnew System::Drawing::Font(L"Segoe UI", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->lbRole->Location = System::Drawing::Point(15, 143);
-			this->lbRole->Name = L"lbRole";
-			this->lbRole->Size = System::Drawing::Size(34, 17);
-			this->lbRole->TabIndex = 11;
-			this->lbRole->Text = L"Role";
+			this->lbTitle->Location = System::Drawing::Point(258, 48);
+			this->lbTitle->Margin = System::Windows::Forms::Padding(3, 20, 3, 20);
+			this->lbTitle->Name = L"lbTitle";
+			this->lbTitle->Size = System::Drawing::Size(134, 30);
+			this->lbTitle->TabIndex = 0;
+			this->lbTitle->Text = L"Register User";
 			// 
 			// dgvUsers
 			// 
@@ -335,7 +338,7 @@ namespace StoreApp {
 			this->ClientSize = System::Drawing::Size(650, 366);
 			this->Controls->Add(this->btnLogout);
 			this->Controls->Add(this->pnlList);
-			this->Controls->Add(this->lblTitle);
+			this->Controls->Add(this->lbTitle);
 			this->Controls->Add(this->pnlAdd);
 			this->Controls->Add(this->pnlTop);
 			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::None;

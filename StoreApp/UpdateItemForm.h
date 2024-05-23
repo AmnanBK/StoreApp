@@ -47,7 +47,8 @@ namespace StoreApp {
 
 	private: System::Windows::Forms::TextBox^ tbUsername;
 	private: System::Windows::Forms::Label^ lbName;
-	private: System::Windows::Forms::Label^ lblTitle;
+	private: System::Windows::Forms::Label^ lbTitle;
+
 	private: System::Windows::Forms::NumericUpDown^ nudPrice;
 
 	private: System::Windows::Forms::NumericUpDown^ nudStock;
@@ -69,18 +70,18 @@ namespace StoreApp {
 		{
 			this->pnlTop = (gcnew System::Windows::Forms::Panel());
 			this->pnlAdd = (gcnew System::Windows::Forms::Panel());
+			this->nudPrice = (gcnew System::Windows::Forms::NumericUpDown());
+			this->nudStock = (gcnew System::Windows::Forms::NumericUpDown());
 			this->btnCancel = (gcnew System::Windows::Forms::Button());
 			this->lbPrice = (gcnew System::Windows::Forms::Label());
 			this->btnUpdate = (gcnew System::Windows::Forms::Button());
 			this->lbStock = (gcnew System::Windows::Forms::Label());
 			this->tbUsername = (gcnew System::Windows::Forms::TextBox());
 			this->lbName = (gcnew System::Windows::Forms::Label());
-			this->lblTitle = (gcnew System::Windows::Forms::Label());
-			this->nudStock = (gcnew System::Windows::Forms::NumericUpDown());
-			this->nudPrice = (gcnew System::Windows::Forms::NumericUpDown());
+			this->lbTitle = (gcnew System::Windows::Forms::Label());
 			this->pnlAdd->SuspendLayout();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->nudStock))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->nudPrice))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->nudStock))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// pnlTop
@@ -108,6 +109,28 @@ namespace StoreApp {
 			this->pnlAdd->Name = L"pnlAdd";
 			this->pnlAdd->Size = System::Drawing::Size(262, 203);
 			this->pnlAdd->TabIndex = 3;
+			// 
+			// nudPrice
+			// 
+			this->nudPrice->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
+			this->nudPrice->Font = (gcnew System::Drawing::Font(L"Segoe UI", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->nudPrice->Location = System::Drawing::Point(10, 129);
+			this->nudPrice->Margin = System::Windows::Forms::Padding(10, 5, 10, 10);
+			this->nudPrice->Name = L"nudPrice";
+			this->nudPrice->Size = System::Drawing::Size(242, 25);
+			this->nudPrice->TabIndex = 14;
+			// 
+			// nudStock
+			// 
+			this->nudStock->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
+			this->nudStock->Font = (gcnew System::Drawing::Font(L"Segoe UI", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->nudStock->Location = System::Drawing::Point(10, 72);
+			this->nudStock->Margin = System::Windows::Forms::Padding(10, 5, 10, 10);
+			this->nudStock->Name = L"nudStock";
+			this->nudStock->Size = System::Drawing::Size(242, 25);
+			this->nudStock->TabIndex = 13;
 			// 
 			// btnCancel
 			// 
@@ -184,39 +207,17 @@ namespace StoreApp {
 			this->lbName->TabIndex = 1;
 			this->lbName->Text = L"Name";
 			// 
-			// lblTitle
+			// lbTitle
 			// 
-			this->lblTitle->AutoSize = true;
-			this->lblTitle->Font = (gcnew System::Drawing::Font(L"Segoe UI", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->lbTitle->AutoSize = true;
+			this->lbTitle->Font = (gcnew System::Drawing::Font(L"Segoe UI", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->lblTitle->Location = System::Drawing::Point(83, 33);
-			this->lblTitle->Margin = System::Windows::Forms::Padding(20, 5, 20, 5);
-			this->lblTitle->Name = L"lblTitle";
-			this->lblTitle->Size = System::Drawing::Size(128, 30);
-			this->lblTitle->TabIndex = 13;
-			this->lblTitle->Text = L"Update Item";
-			// 
-			// nudStock
-			// 
-			this->nudStock->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
-			this->nudStock->Font = (gcnew System::Drawing::Font(L"Segoe UI", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->nudStock->Location = System::Drawing::Point(10, 72);
-			this->nudStock->Margin = System::Windows::Forms::Padding(10, 5, 10, 10);
-			this->nudStock->Name = L"nudStock";
-			this->nudStock->Size = System::Drawing::Size(242, 25);
-			this->nudStock->TabIndex = 13;
-			// 
-			// nudPrice
-			// 
-			this->nudPrice->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
-			this->nudPrice->Font = (gcnew System::Drawing::Font(L"Segoe UI", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->nudPrice->Location = System::Drawing::Point(10, 129);
-			this->nudPrice->Margin = System::Windows::Forms::Padding(10, 5, 10, 10);
-			this->nudPrice->Name = L"nudPrice";
-			this->nudPrice->Size = System::Drawing::Size(242, 25);
-			this->nudPrice->TabIndex = 14;
+			this->lbTitle->Location = System::Drawing::Point(83, 33);
+			this->lbTitle->Margin = System::Windows::Forms::Padding(20, 5, 20, 5);
+			this->lbTitle->Name = L"lbTitle";
+			this->lbTitle->Size = System::Drawing::Size(128, 30);
+			this->lbTitle->TabIndex = 13;
+			this->lbTitle->Text = L"Update Item";
 			// 
 			// UpdateItemForm
 			// 
@@ -224,7 +225,7 @@ namespace StoreApp {
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackgroundImageLayout = System::Windows::Forms::ImageLayout::None;
 			this->ClientSize = System::Drawing::Size(300, 300);
-			this->Controls->Add(this->lblTitle);
+			this->Controls->Add(this->lbTitle);
 			this->Controls->Add(this->pnlAdd);
 			this->Controls->Add(this->pnlTop);
 			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::None;
@@ -232,8 +233,8 @@ namespace StoreApp {
 			this->Text = L"UpdateItemForm";
 			this->pnlAdd->ResumeLayout(false);
 			this->pnlAdd->PerformLayout();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->nudStock))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->nudPrice))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->nudStock))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
