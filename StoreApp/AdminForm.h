@@ -39,8 +39,9 @@ namespace StoreApp {
 	protected:
 	private: System::Windows::Forms::Button^ btnExit;
 	private: System::Windows::Forms::Panel^ pnlAdd;
+	private: System::Windows::Forms::Button^ btnAdd;
 
-	private: System::Windows::Forms::Button^ btnLogin;
+
 	private: System::Windows::Forms::TextBox^ tbPassword;
 	private: System::Windows::Forms::PictureBox^ pbPassword;
 	private: System::Windows::Forms::Label^ lbPassword;
@@ -79,7 +80,7 @@ namespace StoreApp {
 			this->lbRole = (gcnew System::Windows::Forms::Label());
 			this->rbKasir = (gcnew System::Windows::Forms::RadioButton());
 			this->rbGudang = (gcnew System::Windows::Forms::RadioButton());
-			this->btnLogin = (gcnew System::Windows::Forms::Button());
+			this->btnAdd = (gcnew System::Windows::Forms::Button());
 			this->tbPassword = (gcnew System::Windows::Forms::TextBox());
 			this->pbPassword = (gcnew System::Windows::Forms::PictureBox());
 			this->lbPassword = (gcnew System::Windows::Forms::Label());
@@ -132,7 +133,7 @@ namespace StoreApp {
 			this->pnlAdd->Controls->Add(this->lbRole);
 			this->pnlAdd->Controls->Add(this->rbKasir);
 			this->pnlAdd->Controls->Add(this->rbGudang);
-			this->pnlAdd->Controls->Add(this->btnLogin);
+			this->pnlAdd->Controls->Add(this->btnAdd);
 			this->pnlAdd->Controls->Add(this->tbPassword);
 			this->pnlAdd->Controls->Add(this->pbPassword);
 			this->pnlAdd->Controls->Add(this->lbPassword);
@@ -169,6 +170,7 @@ namespace StoreApp {
 			this->rbKasir->TabStop = true;
 			this->rbKasir->Text = L"Staff Kasir";
 			this->rbKasir->UseVisualStyleBackColor = true;
+			this->rbKasir->CheckedChanged += gcnew System::EventHandler(this, &AdminForm::rbKasir_CheckedChanged);
 			// 
 			// rbGudang
 			// 
@@ -183,21 +185,23 @@ namespace StoreApp {
 			this->rbGudang->TabStop = true;
 			this->rbGudang->Text = L"Staff Gudang";
 			this->rbGudang->UseVisualStyleBackColor = true;
+			this->rbGudang->CheckedChanged += gcnew System::EventHandler(this, &AdminForm::rbGudang_CheckedChanged);
 			// 
-			// btnLogin
+			// btnAdd
 			// 
-			this->btnLogin->FlatAppearance->MouseDownBackColor = System::Drawing::Color::DarkGray;
-			this->btnLogin->FlatAppearance->MouseOverBackColor = System::Drawing::Color::LightGray;
-			this->btnLogin->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			this->btnLogin->Font = (gcnew System::Drawing::Font(L"Segoe UI", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->btnAdd->FlatAppearance->MouseDownBackColor = System::Drawing::Color::DarkGray;
+			this->btnAdd->FlatAppearance->MouseOverBackColor = System::Drawing::Color::LightGray;
+			this->btnAdd->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+			this->btnAdd->Font = (gcnew System::Drawing::Font(L"Segoe UI", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->btnLogin->Location = System::Drawing::Point(87, 210);
-			this->btnLogin->Margin = System::Windows::Forms::Padding(3, 20, 3, 20);
-			this->btnLogin->Name = L"btnLogin";
-			this->btnLogin->Size = System::Drawing::Size(76, 35);
-			this->btnLogin->TabIndex = 8;
-			this->btnLogin->Text = L"Add";
-			this->btnLogin->UseVisualStyleBackColor = true;
+			this->btnAdd->Location = System::Drawing::Point(87, 210);
+			this->btnAdd->Margin = System::Windows::Forms::Padding(3, 20, 3, 20);
+			this->btnAdd->Name = L"btnAdd";
+			this->btnAdd->Size = System::Drawing::Size(76, 35);
+			this->btnAdd->TabIndex = 8;
+			this->btnAdd->Text = L"Add";
+			this->btnAdd->UseVisualStyleBackColor = true;
+			this->btnAdd->Click += gcnew System::EventHandler(this, &AdminForm::btnAdd_Click);
 			// 
 			// tbPassword
 			// 
@@ -294,6 +298,7 @@ namespace StoreApp {
 			this->dgvUsers->ReadOnly = true;
 			this->dgvUsers->Size = System::Drawing::Size(312, 157);
 			this->dgvUsers->TabIndex = 3;
+			this->dgvUsers->CellMouseClick += gcnew System::Windows::Forms::DataGridViewCellMouseEventHandler(this, &AdminForm::dgvUsers_CellMouseClick);
 			// 
 			// btnDelete
 			// 
@@ -309,6 +314,7 @@ namespace StoreApp {
 			this->btnDelete->TabIndex = 12;
 			this->btnDelete->Text = L"Delete";
 			this->btnDelete->UseVisualStyleBackColor = true;
+			this->btnDelete->Click += gcnew System::EventHandler(this, &AdminForm::btnDelete_Click);
 			// 
 			// pnlList
 			// 
@@ -369,6 +375,25 @@ namespace StoreApp {
 	private: Point offset;
 	private: String^ connString = "datasource=127.0.0.1;port=3306;username=root;password=;database=storedb;";
 	private: MySqlConnection^ sqlConn = gcnew MySqlConnection(connString);
+	private: String^ role;
+	private: String^ selectedUsername;
+
+	private: System::Void refreshDataTable() {
+		try {
+			sqlConn->Open();
+			String^ sqlQuery = "SELECT username, password, role FROM users;";
+			MySqlDataAdapter^ sqlDataAdapter = gcnew MySqlDataAdapter(sqlQuery, sqlConn);
+			DataTable^ dataTable = gcnew DataTable();
+
+			sqlDataAdapter->Fill(dataTable);
+			dgvUsers->DataSource = dataTable;
+			sqlConn->Close();
+		}
+		catch (Exception^ e) {
+			MessageBox::Show(e->Message, "Failed to Connect", MessageBoxButtons::OK);
+		}
+	}
+
 	private: System::Void pnlTop_MouseDown(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) {
 		dragging = true;
 		offset.X = e->X;
@@ -393,18 +418,73 @@ namespace StoreApp {
 		Close();
 	}
 	private: System::Void AdminForm_Load(System::Object^ sender, System::EventArgs^ e) {
+		refreshDataTable();
+
+	}
+	private: System::Void rbGudang_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
+		role = "Staff Gudang";
+	}
+	private: System::Void rbKasir_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
+		role = "Staff Kasir";
+	}
+	private: System::Void dgvUsers_CellMouseClick(System::Object^ sender, System::Windows::Forms::DataGridViewCellMouseEventArgs^ e) {
+		selectedUsername = dgvUsers->CurrentRow->Cells[0]->Value->ToString();
+	}
+	private: System::Void btnAdd_Click(System::Object^ sender, System::EventArgs^ e) {
+		String^ username = tbUsername->Text;
+		String^ password = tbPassword->Text;
+
+		if (username->Length == 0 || password->Length == 0) {
+			MessageBox::Show("Please fill the data", "Username or Password Empty", MessageBoxButtons::OK);
+			return;
+		}
+
+		for (int i = 0; i < dgvUsers->RowCount; i++) {
+			if (username == dgvUsers->Rows[i]->Cells[0]->Value->ToString()) {
+				MessageBox::Show("Username already exist", "Username Taken", MessageBoxButtons::OK);
+				return;
+			}
+		}
+
 		try {
 			sqlConn->Open();
-			String^ sqlQuery = "SELECT username, password, role FROM users;";
-			MySqlDataAdapter^ sqlDataAdapter = gcnew MySqlDataAdapter(sqlQuery, sqlConn);
-			DataTable^ dataTable = gcnew DataTable();
-
-			sqlDataAdapter->Fill(dataTable);
-			dgvUsers->DataSource = dataTable;
+			String^ sqlQuery = "INSERT INTO users (username, password, role) VALUES (@username, @password, @role);";
+			MySqlCommand^ sqlComm = gcnew MySqlCommand(sqlQuery, sqlConn);
+			sqlComm->Parameters->AddWithValue("@username", username);
+			sqlComm->Parameters->AddWithValue("@password", password);
+			sqlComm->Parameters->AddWithValue("@role", role);
+			sqlComm->ExecuteNonQuery();
+			sqlConn->Close();
 		}
 		catch (Exception^ e) {
-			MessageBox::Show(e->Message, "Failed to Connect", MessageBoxButtons::OK);
+			MessageBox::Show(e->Message, "Failed to Add", MessageBoxButtons::OK);
 		}
+
+		refreshDataTable();
 	}
-};
+	private: System::Void btnDelete_Click(System::Object^ sender, System::EventArgs^ e) {
+		if (selectedUsername == "Admin") {
+			MessageBox::Show("Cannot delete user Admin", "Operation Prohibited", MessageBoxButtons::OK);
+			return;
+		}
+
+		if ((MessageBox::Show("Are you sure want to delete this user?", "Delete User", MessageBoxButtons::OKCancel)) == System::Windows::Forms::DialogResult::Cancel) {
+			return;
+		}
+
+		try {
+			sqlConn->Open();
+			String^ sqlQuery = "DELETE FROM users WHERE username=@username;";
+			MySqlCommand^ sqlComm = gcnew MySqlCommand(sqlQuery, sqlConn);
+			sqlComm->Parameters->AddWithValue("@username", selectedUsername);
+			sqlComm->ExecuteNonQuery();
+			sqlConn->Close();
+		}
+		catch (Exception^ e) {
+			MessageBox::Show(e->Message, "Failed to Delete", MessageBoxButtons::OK);
+		}
+
+		refreshDataTable();
+	}
+	};
 }
