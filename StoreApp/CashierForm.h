@@ -1,4 +1,5 @@
 #pragma once
+#include "Item.h"
 
 namespace StoreApp {
 
@@ -8,6 +9,8 @@ namespace StoreApp {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace MySql::Data::MySqlClient;
+	using namespace System::Collections::Generic;
 
 	/// <summary>
 	/// Summary for CashierForm
@@ -40,7 +43,8 @@ namespace StoreApp {
 	private: System::Windows::Forms::Button^ btnLogout;
 	private: System::Windows::Forms::TextBox^ tbSearch;
 	private: System::Windows::Forms::DataGridView^ dgvListItem;
-	private: System::Windows::Forms::DataGridView^ dgvBuyItem;
+	private: System::Windows::Forms::DataGridView^ dgvPurchaseItem;
+
 
 
 
@@ -63,6 +67,8 @@ namespace StoreApp {
 	private: System::Windows::Forms::Button^ btnAdd;
 	private: System::Windows::Forms::Button^ btnDelete;
 	private: System::Windows::Forms::Label^ lblTitle;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^ name;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^ quantity;
 
 
 
@@ -88,7 +94,7 @@ namespace StoreApp {
 			this->btnLogout = (gcnew System::Windows::Forms::Button());
 			this->tbSearch = (gcnew System::Windows::Forms::TextBox());
 			this->dgvListItem = (gcnew System::Windows::Forms::DataGridView());
-			this->dgvBuyItem = (gcnew System::Windows::Forms::DataGridView());
+			this->dgvPurchaseItem = (gcnew System::Windows::Forms::DataGridView());
 			this->lbTotal = (gcnew System::Windows::Forms::Label());
 			this->lbSumPrice = (gcnew System::Windows::Forms::Label());
 			this->pnlSumPrice = (gcnew System::Windows::Forms::Panel());
@@ -100,9 +106,11 @@ namespace StoreApp {
 			this->lbPriceItem = (gcnew System::Windows::Forms::Label());
 			this->lbNameItem = (gcnew System::Windows::Forms::Label());
 			this->lblTitle = (gcnew System::Windows::Forms::Label());
+			this->name = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->quantity = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->pnlTop->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dgvListItem))->BeginInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dgvBuyItem))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dgvPurchaseItem))->BeginInit();
 			this->pnlSumPrice->SuspendLayout();
 			this->pnlDetail->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->nudQty))->BeginInit();
@@ -159,32 +167,45 @@ namespace StoreApp {
 			this->tbSearch->Name = L"tbSearch";
 			this->tbSearch->Size = System::Drawing::Size(240, 25);
 			this->tbSearch->TabIndex = 17;
+			this->tbSearch->TextChanged += gcnew System::EventHandler(this, &CashierForm::tbSearch_TextChanged);
 			// 
 			// dgvListItem
 			// 
 			this->dgvListItem->AllowUserToAddRows = false;
 			this->dgvListItem->AllowUserToDeleteRows = false;
 			this->dgvListItem->AllowUserToOrderColumns = true;
+			this->dgvListItem->AllowUserToResizeRows = false;
+			this->dgvListItem->AutoSizeColumnsMode = System::Windows::Forms::DataGridViewAutoSizeColumnsMode::Fill;
 			this->dgvListItem->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->dgvListItem->Location = System::Drawing::Point(29, 127);
 			this->dgvListItem->Margin = System::Windows::Forms::Padding(20, 3, 10, 10);
 			this->dgvListItem->Name = L"dgvListItem";
 			this->dgvListItem->ReadOnly = true;
+			this->dgvListItem->RowHeadersVisible = false;
 			this->dgvListItem->Size = System::Drawing::Size(240, 304);
 			this->dgvListItem->TabIndex = 18;
+			this->dgvListItem->CellMouseClick += gcnew System::Windows::Forms::DataGridViewCellMouseEventHandler(this, &CashierForm::dgvListItem_CellMouseClick);
 			// 
-			// dgvBuyItem
+			// dgvPurchaseItem
 			// 
-			this->dgvBuyItem->AllowUserToAddRows = false;
-			this->dgvBuyItem->AllowUserToDeleteRows = false;
-			this->dgvBuyItem->AllowUserToOrderColumns = true;
-			this->dgvBuyItem->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
-			this->dgvBuyItem->Location = System::Drawing::Point(531, 127);
-			this->dgvBuyItem->Margin = System::Windows::Forms::Padding(10, 3, 20, 10);
-			this->dgvBuyItem->Name = L"dgvBuyItem";
-			this->dgvBuyItem->ReadOnly = true;
-			this->dgvBuyItem->Size = System::Drawing::Size(240, 304);
-			this->dgvBuyItem->TabIndex = 19;
+			this->dgvPurchaseItem->AllowUserToAddRows = false;
+			this->dgvPurchaseItem->AllowUserToDeleteRows = false;
+			this->dgvPurchaseItem->AllowUserToOrderColumns = true;
+			this->dgvPurchaseItem->AllowUserToResizeRows = false;
+			this->dgvPurchaseItem->AutoSizeColumnsMode = System::Windows::Forms::DataGridViewAutoSizeColumnsMode::Fill;
+			this->dgvPurchaseItem->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
+			this->dgvPurchaseItem->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(2) {
+				this->name,
+					this->quantity
+			});
+			this->dgvPurchaseItem->Location = System::Drawing::Point(531, 127);
+			this->dgvPurchaseItem->Margin = System::Windows::Forms::Padding(10, 3, 20, 10);
+			this->dgvPurchaseItem->MultiSelect = false;
+			this->dgvPurchaseItem->Name = L"dgvPurchaseItem";
+			this->dgvPurchaseItem->ReadOnly = true;
+			this->dgvPurchaseItem->RowHeadersVisible = false;
+			this->dgvPurchaseItem->Size = System::Drawing::Size(240, 304);
+			this->dgvPurchaseItem->TabIndex = 19;
 			// 
 			// lbTotal
 			// 
@@ -206,12 +227,12 @@ namespace StoreApp {
 			this->lbSumPrice->Dock = System::Windows::Forms::DockStyle::Right;
 			this->lbSumPrice->Font = (gcnew System::Drawing::Font(L"Segoe UI", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->lbSumPrice->Location = System::Drawing::Point(168, 0);
+			this->lbSumPrice->Location = System::Drawing::Point(218, 0);
 			this->lbSumPrice->Name = L"lbSumPrice";
 			this->lbSumPrice->RightToLeft = System::Windows::Forms::RightToLeft::No;
-			this->lbSumPrice->Size = System::Drawing::Size(72, 25);
+			this->lbSumPrice->Size = System::Drawing::Size(22, 25);
 			this->lbSumPrice->TabIndex = 21;
-			this->lbSumPrice->Text = L"100000";
+			this->lbSumPrice->Text = L"0";
 			this->lbSumPrice->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
 			// 
 			// pnlSumPrice
@@ -261,6 +282,7 @@ namespace StoreApp {
 			this->btnAdd->TabIndex = 29;
 			this->btnAdd->Text = L"Add";
 			this->btnAdd->UseVisualStyleBackColor = true;
+			this->btnAdd->Click += gcnew System::EventHandler(this, &CashierForm::btnAdd_Click);
 			// 
 			// btnDelete
 			// 
@@ -329,6 +351,18 @@ namespace StoreApp {
 			this->lblTitle->TabIndex = 27;
 			this->lblTitle->Text = L"TOKO FLOVER";
 			// 
+			// name
+			// 
+			this->name->HeaderText = L"Name";
+			this->name->Name = L"name";
+			this->name->ReadOnly = true;
+			// 
+			// quantity
+			// 
+			this->quantity->HeaderText = L"Quantity";
+			this->quantity->Name = L"quantity";
+			this->quantity->ReadOnly = true;
+			// 
 			// CashierForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -337,7 +371,7 @@ namespace StoreApp {
 			this->Controls->Add(this->lblTitle);
 			this->Controls->Add(this->pnlDetail);
 			this->Controls->Add(this->pnlSumPrice);
-			this->Controls->Add(this->dgvBuyItem);
+			this->Controls->Add(this->dgvPurchaseItem);
 			this->Controls->Add(this->dgvListItem);
 			this->Controls->Add(this->tbSearch);
 			this->Controls->Add(this->btnLogout);
@@ -345,9 +379,10 @@ namespace StoreApp {
 			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::None;
 			this->Name = L"CashierForm";
 			this->Text = L"CashierForm";
+			this->Load += gcnew System::EventHandler(this, &CashierForm::CashierForm_Load);
 			this->pnlTop->ResumeLayout(false);
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dgvListItem))->EndInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dgvBuyItem))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dgvPurchaseItem))->EndInit();
 			this->pnlSumPrice->ResumeLayout(false);
 			this->pnlSumPrice->PerformLayout();
 			this->pnlDetail->ResumeLayout(false);
@@ -361,6 +396,59 @@ namespace StoreApp {
 	public: bool logout = false;
 	private: bool dragging;
 	private: Point offset;
+	private: String^ selectedItem;
+	private: String^ selectedPrice;
+	private: List<Item^>^ listPurchaseItem = gcnew List<Item^>();
+	private: String^ connString = "datasource=127.0.0.1;port=3306;username=root;password=;database=storedb;";
+	private: MySqlConnection^ sqlConn = gcnew MySqlConnection(connString);
+
+	private: System::Void refreshDataTable(String^ query) {
+		try {
+			sqlConn->Open();
+			String^ sqlQuery = query;
+			MySqlDataAdapter^ sqlDataAdapter = gcnew MySqlDataAdapter(sqlQuery, sqlConn);
+			DataTable^ dataTable = gcnew DataTable();
+			sqlDataAdapter->Fill(dataTable);
+			dgvListItem->DataSource = dataTable;
+			sqlConn->Close();
+		}
+		catch (Exception^ e) {
+			MessageBox::Show(e->Message, "Failed to Load Data", MessageBoxButtons::OK);
+		}
+	}
+
+	private: System::Void updateSelected() {
+		if (dgvListItem->RowCount > 0) {
+			selectedItem = dgvListItem->CurrentRow->Cells[0]->Value->ToString();
+			selectedPrice = dgvListItem->CurrentRow->Cells[1]->Value->ToString();
+			lbNameItem->Text = selectedItem;
+			lbPriceItem->Text = selectedPrice;
+			nudQty->Value = 0;
+			try {
+				sqlConn->Open();
+				String^ sqlQuery = "SELECT stock FROM items WHERE name=@name;";
+				MySqlCommand^ sqlComm = gcnew MySqlCommand(sqlQuery, sqlConn);
+				sqlComm->Parameters->AddWithValue("@name", selectedItem);
+				MySqlDataReader^ sqlReader = sqlComm->ExecuteReader();
+
+				if (sqlReader->Read()) {
+					nudQty->Maximum = sqlReader->GetInt32(0);
+				}
+				sqlConn->Close();
+			}
+			catch (Exception^ e) {
+				MessageBox::Show(e->Message, "Error", MessageBoxButtons::OK);
+			}
+		}
+	}
+
+	private: System::Void updatePurchaseTable(List<Item^>^ data) {
+		dgvPurchaseItem->Rows->Clear();
+		for (int i = 0; i < data->Count; i++) {
+			dgvPurchaseItem->Rows->Add(data[i]->name, data[i]->qty);
+		}
+	}
+
 	private: System::Void pnlTop_MouseDown(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) {
 		dragging = true;
 		offset.X = e->X;
@@ -385,6 +473,23 @@ namespace StoreApp {
 	private: System::Void btnLogout_Click(System::Object^ sender, System::EventArgs^ e) {
 		logout = true;
 		Close();
+	}
+	private: System::Void CashierForm_Load(System::Object^ sender, System::EventArgs^ e) {
+		refreshDataTable("SELECT name, price FROM items;");
+		updateSelected();
+	}
+	private: System::Void dgvListItem_CellMouseClick(System::Object^ sender, System::Windows::Forms::DataGridViewCellMouseEventArgs^ e) {
+		updateSelected();
+	}
+	private: System::Void tbSearch_TextChanged(System::Object^ sender, System::EventArgs^ e) {
+		refreshDataTable("SELECT name, price FROM items WHERE name LIKE '%" + tbSearch->Text + "%';");
+		updateSelected();
+	}
+	private: System::Void btnAdd_Click(System::Object^ sender, System::EventArgs^ e) {
+		int^ quantity = Convert::ToInt32(nudQty->Value);
+		Item^ dump = gcnew Item(selectedItem, quantity, Convert::ToInt32(selectedPrice));
+		listPurchaseItem->Add(dump);
+		updatePurchaseTable(listPurchaseItem);
 	}
 };
 }
