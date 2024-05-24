@@ -55,6 +55,7 @@ namespace StoreApp {
 	private: System::Windows::Forms::Label^ lbPassword;
 
 	private: System::Windows::Forms::Button^ btnLogin;
+
 	protected:
 
 	protected:

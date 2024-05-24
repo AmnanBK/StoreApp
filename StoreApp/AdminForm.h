@@ -290,12 +290,14 @@ namespace StoreApp {
 			this->dgvUsers->AllowUserToDeleteRows = false;
 			this->dgvUsers->AllowUserToOrderColumns = true;
 			this->dgvUsers->AllowUserToResizeColumns = false;
+			this->dgvUsers->AutoSizeColumnsMode = System::Windows::Forms::DataGridViewAutoSizeColumnsMode::Fill;
 			this->dgvUsers->BorderStyle = System::Windows::Forms::BorderStyle::None;
 			this->dgvUsers->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->dgvUsers->Location = System::Drawing::Point(0, 31);
 			this->dgvUsers->Margin = System::Windows::Forms::Padding(15, 15, 20, 15);
 			this->dgvUsers->Name = L"dgvUsers";
 			this->dgvUsers->ReadOnly = true;
+			this->dgvUsers->RowHeadersVisible = false;
 			this->dgvUsers->Size = System::Drawing::Size(312, 157);
 			this->dgvUsers->TabIndex = 3;
 			this->dgvUsers->CellMouseClick += gcnew System::Windows::Forms::DataGridViewCellMouseEventHandler(this, &AdminForm::dgvUsers_CellMouseClick);
@@ -419,6 +421,7 @@ namespace StoreApp {
 	}
 	private: System::Void AdminForm_Load(System::Object^ sender, System::EventArgs^ e) {
 		refreshDataTable();
+		selectedUsername = dgvUsers->Rows[0]->Cells[0]->Value->ToString();
 
 	}
 	private: System::Void rbGudang_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
@@ -463,7 +466,7 @@ namespace StoreApp {
 		refreshDataTable();
 	}
 	private: System::Void btnDelete_Click(System::Object^ sender, System::EventArgs^ e) {
-		if (selectedUsername == "Admin") {
+		if (selectedUsername == "admin") {
 			MessageBox::Show("Cannot delete user Admin", "Operation Prohibited", MessageBoxButtons::OK);
 			return;
 		}
