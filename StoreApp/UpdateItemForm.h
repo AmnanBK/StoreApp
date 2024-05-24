@@ -8,6 +8,7 @@ namespace StoreApp {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace MySql::Data::MySqlClient;
 
 	/// <summary>
 	/// Summary for UpdateItemForm
@@ -22,17 +23,19 @@ namespace StoreApp {
 			//TODO: Add the constructor code here
 			//
 		}
-		UpdateItemForm(String^ data)
+		UpdateItemForm(String^ name, String^ stock, String^ price)
 		{
 			InitializeComponent();
-			selectedItem = data;
+			selectedItem = name;
+			selectedStock = stock;
+			selectedPrice = price;
 			if (selectedItem->Length == 0) {
 				lbTitle->Text = "Add Item";
 			}
 			else {
 				lbTitle->Text = "Update Item";
 			}
-			
+
 			//
 			//TODO: Add the constructor code here
 			//
@@ -58,9 +61,10 @@ namespace StoreApp {
 
 
 	private: System::Windows::Forms::Label^ lbStock;
+	private: System::Windows::Forms::TextBox^ tbName;
 
 
-	private: System::Windows::Forms::TextBox^ tbUsername;
+
 	private: System::Windows::Forms::Label^ lbName;
 	private: System::Windows::Forms::Label^ lbTitle;
 
@@ -91,7 +95,7 @@ namespace StoreApp {
 			this->lbPrice = (gcnew System::Windows::Forms::Label());
 			this->btnUpdate = (gcnew System::Windows::Forms::Button());
 			this->lbStock = (gcnew System::Windows::Forms::Label());
-			this->tbUsername = (gcnew System::Windows::Forms::TextBox());
+			this->tbName = (gcnew System::Windows::Forms::TextBox());
 			this->lbName = (gcnew System::Windows::Forms::Label());
 			this->lbTitle = (gcnew System::Windows::Forms::Label());
 			this->pnlAdd->SuspendLayout();
@@ -120,7 +124,7 @@ namespace StoreApp {
 			this->pnlAdd->Controls->Add(this->lbPrice);
 			this->pnlAdd->Controls->Add(this->btnUpdate);
 			this->pnlAdd->Controls->Add(this->lbStock);
-			this->pnlAdd->Controls->Add(this->tbUsername);
+			this->pnlAdd->Controls->Add(this->tbName);
 			this->pnlAdd->Controls->Add(this->lbName);
 			this->pnlAdd->Location = System::Drawing::Point(19, 78);
 			this->pnlAdd->Margin = System::Windows::Forms::Padding(10);
@@ -135,6 +139,7 @@ namespace StoreApp {
 				static_cast<System::Byte>(0)));
 			this->nudPrice->Location = System::Drawing::Point(10, 129);
 			this->nudPrice->Margin = System::Windows::Forms::Padding(10, 5, 10, 10);
+			this->nudPrice->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 1000000, 0, 0, 0 });
 			this->nudPrice->Name = L"nudPrice";
 			this->nudPrice->Size = System::Drawing::Size(242, 25);
 			this->nudPrice->TabIndex = 14;
@@ -146,6 +151,7 @@ namespace StoreApp {
 				static_cast<System::Byte>(0)));
 			this->nudStock->Location = System::Drawing::Point(10, 72);
 			this->nudStock->Margin = System::Windows::Forms::Padding(10, 5, 10, 10);
+			this->nudStock->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 10000, 0, 0, 0 });
 			this->nudStock->Name = L"nudStock";
 			this->nudStock->Size = System::Drawing::Size(242, 25);
 			this->nudStock->TabIndex = 13;
@@ -164,6 +170,7 @@ namespace StoreApp {
 			this->btnCancel->TabIndex = 12;
 			this->btnCancel->Text = L"Cancel";
 			this->btnCancel->UseVisualStyleBackColor = true;
+			this->btnCancel->Click += gcnew System::EventHandler(this, &UpdateItemForm::btnCancel_Click);
 			// 
 			// lbPrice
 			// 
@@ -190,6 +197,7 @@ namespace StoreApp {
 			this->btnUpdate->TabIndex = 8;
 			this->btnUpdate->Text = L"Update";
 			this->btnUpdate->UseVisualStyleBackColor = true;
+			this->btnUpdate->Click += gcnew System::EventHandler(this, &UpdateItemForm::btnUpdate_Click);
 			// 
 			// lbStock
 			// 
@@ -202,17 +210,17 @@ namespace StoreApp {
 			this->lbStock->TabIndex = 5;
 			this->lbStock->Text = L"Stock";
 			// 
-			// tbUsername
+			// tbName
 			// 
-			this->tbUsername->BackColor = System::Drawing::Color::White;
-			this->tbUsername->BorderStyle = System::Windows::Forms::BorderStyle::None;
-			this->tbUsername->Font = (gcnew System::Drawing::Font(L"Segoe UI", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->tbName->BackColor = System::Drawing::Color::White;
+			this->tbName->BorderStyle = System::Windows::Forms::BorderStyle::None;
+			this->tbName->Font = (gcnew System::Drawing::Font(L"Segoe UI", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->tbUsername->Location = System::Drawing::Point(10, 22);
-			this->tbUsername->Margin = System::Windows::Forms::Padding(10, 5, 10, 10);
-			this->tbUsername->Name = L"tbUsername";
-			this->tbUsername->Size = System::Drawing::Size(242, 18);
-			this->tbUsername->TabIndex = 4;
+			this->tbName->Location = System::Drawing::Point(10, 22);
+			this->tbName->Margin = System::Windows::Forms::Padding(10, 5, 10, 10);
+			this->tbName->Name = L"tbName";
+			this->tbName->Size = System::Drawing::Size(242, 18);
+			this->tbName->TabIndex = 4;
 			// 
 			// lbName
 			// 
@@ -249,6 +257,7 @@ namespace StoreApp {
 			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::None;
 			this->Name = L"UpdateItemForm";
 			this->Text = L"UpdateItemForm";
+			this->Load += gcnew System::EventHandler(this, &UpdateItemForm::UpdateItemForm_Load);
 			this->pnlAdd->ResumeLayout(false);
 			this->pnlAdd->PerformLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->nudPrice))->EndInit();
@@ -260,21 +269,67 @@ namespace StoreApp {
 	private: bool dragging;
 	private: Point offset;
 	private: String^ selectedItem;
+	private: String^ selectedStock;
+	private: String^ selectedPrice;
+	private: String^ connString = "datasource=127.0.0.1;port=3306;username=root;password=;database=storedb;";
+	private: MySqlConnection^ sqlConn = gcnew MySqlConnection(connString);
+
+	private: System::Void updateItem(String^ query) {
+		try {
+			sqlConn->Open();
+			String^ sqlQuery = query;
+			MySqlCommand^ sqlComm = gcnew MySqlCommand(sqlQuery, sqlConn);
+			sqlComm->ExecuteNonQuery();
+			sqlConn->Close();
+		}
+		catch (Exception^ e) {
+			MessageBox::Show(e->Message, "Failed to Update", MessageBoxButtons::OK);
+		}
+	}
+
 	private: System::Void pnlTop_MouseDown(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) {
 		dragging = true;
 		offset.X = e->X;
 		offset.Y = e->Y;
 	}
-
 	private: System::Void pnlTop_MouseMove(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) {
 		if (dragging) {
 			Point currentScreenPosition = PointToScreen(Point(e->X, e->Y));
 			Location = Point(currentScreenPosition.X - offset.X, currentScreenPosition.Y - offset.Y);
 		}
 	}
-
 	private: System::Void pnlTop_MouseUp(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) {
 		dragging = false;
 	}
-};
+	private: System::Void btnUpdate_Click(System::Object^ sender, System::EventArgs^ e) {
+		String^ name = tbName->Text;
+		String^ stock = nudStock->Text;
+		String^ price = nudPrice->Text;
+
+		if (lbTitle->Text == "Add Item") {
+			String^ sqlQuery = "INSERT INTO items (name, stock, price) VALUES ('" + name + "', '" + stock + "', '" + price + "');";
+			updateItem(sqlQuery);
+			MessageBox::Show("Succesfully add an item", "Add Item Succes", MessageBoxButtons::OK);
+		}
+
+		if (lbTitle->Text == "Update Item") {
+			String^ sqlQuery = "UPDATE items SET name='" + name + "', stock='" + stock + "', price='" + price + "' WHERE name='" + selectedItem + "';";
+			updateItem(sqlQuery);
+			MessageBox::Show("Succesfully update an item", "Update Item Succes", MessageBoxButtons::OK);
+		}
+
+		Close();
+
+	}
+	private: System::Void btnCancel_Click(System::Object^ sender, System::EventArgs^ e) {
+		Close();
+	}
+	private: System::Void UpdateItemForm_Load(System::Object^ sender, System::EventArgs^ e) {
+		if (lbTitle->Text == "Update Item") {
+			tbName->Text = selectedItem;
+			nudStock->Text = selectedStock;
+			nudPrice->Text = selectedPrice;
+		}
+	}
+	};
 }

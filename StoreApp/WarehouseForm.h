@@ -298,6 +298,8 @@ namespace StoreApp {
 	private: bool dragging;
 	private: Point offset;
 	private: String^ selectedItem;
+	private: String^ selectedStock;
+	private: String^ selectedPrice;
 	private: String^ connString = "datasource=127.0.0.1;port=3306;username=root;password=;database=storedb;";
 	private: MySqlConnection^ sqlConn = gcnew MySqlConnection(connString);
 
@@ -342,20 +344,24 @@ namespace StoreApp {
 	private: System::Void WarehouseForm_Load(System::Object^ sender, System::EventArgs^ e) {
 		refreshDataTable("SELECT name, stock, price FROM items;");
 		selectedItem = dgvListItems->Rows[0]->Cells[0]->Value->ToString();
+		selectedStock = dgvListItems->Rows[0]->Cells[1]->Value->ToString();
+		selectedPrice = dgvListItems->Rows[0]->Cells[2]->Value->ToString();
 	}
 	private: System::Void dgvListItems_CellMouseClick(System::Object^ sender, System::Windows::Forms::DataGridViewCellMouseEventArgs^ e) {
 		selectedItem = dgvListItems->CurrentRow->Cells[0]->Value->ToString();
+		selectedStock = dgvListItems->CurrentRow->Cells[1]->Value->ToString();
+		selectedPrice = dgvListItems->CurrentRow->Cells[2]->Value->ToString();
 	}
 
 	private: System::Void tbSearch_TextChanged(System::Object^ sender, System::EventArgs^ e) {
 		refreshDataTable("SELECT name, stock, price FROM items WHERE name LIKE '%" + tbSearch->Text + "%';");
 	}
 	private: System::Void btnAdd_Click(System::Object^ sender, System::EventArgs^ e) {
-		UpdateItemForm^ updateItemForm = gcnew UpdateItemForm("");
+		UpdateItemForm^ updateItemForm = gcnew UpdateItemForm("", "", "");
 		updateItemForm->ShowDialog();
 	}
 	private: System::Void btnUpdate_Click(System::Object^ sender, System::EventArgs^ e) {
-		UpdateItemForm^ updateItemForm = gcnew UpdateItemForm(selectedItem);
+		UpdateItemForm^ updateItemForm = gcnew UpdateItemForm(selectedItem, selectedStock, selectedPrice);
 		updateItemForm->ShowDialog();
 	}
 	private: System::Void btnDelete_Click(System::Object^ sender, System::EventArgs^ e) {
@@ -420,6 +426,8 @@ namespace StoreApp {
 		refreshDataTable("SELECT name, stock, price FROM items;");
 		tbSearch->Clear();
 		selectedItem = dgvListItems->Rows[0]->Cells[0]->Value->ToString();
+		selectedStock = dgvListItems->Rows[0]->Cells[1]->Value->ToString();
+		selectedPrice = dgvListItems->Rows[0]->Cells[2]->Value->ToString();
 	}
 };
 }
