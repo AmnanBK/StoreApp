@@ -390,8 +390,8 @@ namespace StoreApp {
 		List<Item^>^ listPrintedItem = gcnew List<Item^>();
 		for (int i = 0; i < dgvListItems->RowCount; i++) {
 			String^ name = dgvListItems->Rows[i]->Cells[0]->Value->ToString();
-			int^ stock = Convert::ToInt32(dgvListItems->Rows[i]->Cells[1]->Value);
-			int^ price = Convert::ToInt32(dgvListItems->Rows[i]->Cells[2]->Value);
+			int stock = Convert::ToInt32(dgvListItems->Rows[i]->Cells[1]->Value);
+			int price = Convert::ToInt32(dgvListItems->Rows[i]->Cells[2]->Value);
 			Item^ dump = gcnew Item(name, stock, price);
 			listPrintedItem->Add(dump);
 		}

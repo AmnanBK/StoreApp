@@ -95,6 +95,8 @@ namespace StoreApp {
 			this->tbSearch = (gcnew System::Windows::Forms::TextBox());
 			this->dgvListItem = (gcnew System::Windows::Forms::DataGridView());
 			this->dgvPurchaseItem = (gcnew System::Windows::Forms::DataGridView());
+			this->name = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->quantity = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->lbTotal = (gcnew System::Windows::Forms::Label());
 			this->lbSumPrice = (gcnew System::Windows::Forms::Label());
 			this->pnlSumPrice = (gcnew System::Windows::Forms::Panel());
@@ -106,8 +108,6 @@ namespace StoreApp {
 			this->lbPriceItem = (gcnew System::Windows::Forms::Label());
 			this->lbNameItem = (gcnew System::Windows::Forms::Label());
 			this->lblTitle = (gcnew System::Windows::Forms::Label());
-			this->name = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->quantity = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->pnlTop->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dgvListItem))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dgvPurchaseItem))->BeginInit();
@@ -207,6 +207,18 @@ namespace StoreApp {
 			this->dgvPurchaseItem->Size = System::Drawing::Size(240, 304);
 			this->dgvPurchaseItem->TabIndex = 19;
 			// 
+			// name
+			// 
+			this->name->HeaderText = L"Name";
+			this->name->Name = L"name";
+			this->name->ReadOnly = true;
+			// 
+			// quantity
+			// 
+			this->quantity->HeaderText = L"Quantity";
+			this->quantity->Name = L"quantity";
+			this->quantity->ReadOnly = true;
+			// 
 			// lbTotal
 			// 
 			this->lbTotal->AutoSize = true;
@@ -264,9 +276,12 @@ namespace StoreApp {
 				static_cast<System::Byte>(0)));
 			this->nudQty->Location = System::Drawing::Point(44, 158);
 			this->nudQty->Margin = System::Windows::Forms::Padding(3, 3, 3, 10);
+			this->nudQty->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 1000, 0, 0, 0 });
+			this->nudQty->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 1, 0, 0, 0 });
 			this->nudQty->Name = L"nudQty";
 			this->nudQty->Size = System::Drawing::Size(148, 27);
 			this->nudQty->TabIndex = 30;
+			this->nudQty->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) { 1, 0, 0, 0 });
 			// 
 			// btnAdd
 			// 
@@ -351,18 +366,6 @@ namespace StoreApp {
 			this->lblTitle->TabIndex = 27;
 			this->lblTitle->Text = L"TOKO FLOVER";
 			// 
-			// name
-			// 
-			this->name->HeaderText = L"Name";
-			this->name->Name = L"name";
-			this->name->ReadOnly = true;
-			// 
-			// quantity
-			// 
-			this->quantity->HeaderText = L"Quantity";
-			this->quantity->Name = L"quantity";
-			this->quantity->ReadOnly = true;
-			// 
 			// CashierForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -423,7 +426,7 @@ namespace StoreApp {
 			selectedPrice = dgvListItem->CurrentRow->Cells[1]->Value->ToString();
 			lbNameItem->Text = selectedItem;
 			lbPriceItem->Text = selectedPrice;
-			nudQty->Value = 0;
+			nudQty->Value = 1;
 			try {
 				sqlConn->Open();
 				String^ sqlQuery = "SELECT stock FROM items WHERE name=@name;";
@@ -486,10 +489,35 @@ namespace StoreApp {
 		updateSelected();
 	}
 	private: System::Void btnAdd_Click(System::Object^ sender, System::EventArgs^ e) {
-		int^ quantity = Convert::ToInt32(nudQty->Value);
-		Item^ dump = gcnew Item(selectedItem, quantity, Convert::ToInt32(selectedPrice));
-		listPurchaseItem->Add(dump);
-		updatePurchaseTable(listPurchaseItem);
+		int quantity = Convert::ToInt32(nudQty->Value);
+		int sizeOfList = listPurchaseItem->Count;
+
+		if (sizeOfList == 0) {
+			Item^ dump = gcnew Item(selectedItem, quantity, Convert::ToInt32(selectedPrice));
+			listPurchaseItem->Add(dump);
+			updatePurchaseTable(listPurchaseItem);
+		}
+		else {
+			bool duplicate = false;
+			int indeksDuplicate = 0;
+			for (int i = 0; i < sizeOfList; i++) {
+				if (selectedItem == listPurchaseItem[i]->name) {
+					duplicate = true;
+					indeksDuplicate = i;
+					break;
+				}
+			}
+
+			if (duplicate) {
+				listPurchaseItem[indeksDuplicate]->qty += quantity;
+				updatePurchaseTable(listPurchaseItem);
+			}
+			else {
+				Item^ dump = gcnew Item(selectedItem, quantity, Convert::ToInt32(selectedPrice));
+				listPurchaseItem->Add(dump);
+				updatePurchaseTable(listPurchaseItem);
+			}
+		}
 	}
 };
 }
