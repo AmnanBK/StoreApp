@@ -1,5 +1,6 @@
 #pragma once
-
+#include "UpdateItemForm.h"
+#include "Item.h"
 namespace StoreApp {
 
 	using namespace System;
@@ -8,6 +9,9 @@ namespace StoreApp {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace MySql::Data::MySqlClient;
+	using namespace System::Collections::Generic;
+	using namespace System::IO;
 
 	/// <summary>
 	/// Summary for WarehouseForm
@@ -43,7 +47,8 @@ namespace StoreApp {
 	private: System::Windows::Forms::TextBox^ tbSearch;
 
 	private: System::Windows::Forms::Button^ btnRefresh;
-	private: System::Windows::Forms::DataGridView^ dataGridView1;
+	private: System::Windows::Forms::DataGridView^ dgvListItems;
+
 	private: System::Windows::Forms::Button^ btnAdd;
 	private: System::Windows::Forms::Button^ btnPrint;
 
@@ -75,14 +80,14 @@ namespace StoreApp {
 			this->pbSearch = (gcnew System::Windows::Forms::PictureBox());
 			this->tbSearch = (gcnew System::Windows::Forms::TextBox());
 			this->btnRefresh = (gcnew System::Windows::Forms::Button());
-			this->dataGridView1 = (gcnew System::Windows::Forms::DataGridView());
+			this->dgvListItems = (gcnew System::Windows::Forms::DataGridView());
 			this->btnAdd = (gcnew System::Windows::Forms::Button());
 			this->btnPrint = (gcnew System::Windows::Forms::Button());
 			this->btnDelete = (gcnew System::Windows::Forms::Button());
 			this->btnUpdate = (gcnew System::Windows::Forms::Button());
 			this->pnlTop->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pbSearch))->BeginInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dgvListItems))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// pnlTop
@@ -162,6 +167,7 @@ namespace StoreApp {
 			this->tbSearch->Name = L"tbSearch";
 			this->tbSearch->Size = System::Drawing::Size(668, 25);
 			this->tbSearch->TabIndex = 16;
+			this->tbSearch->TextChanged += gcnew System::EventHandler(this, &WarehouseForm::tbSearch_TextChanged);
 			// 
 			// btnRefresh
 			// 
@@ -178,18 +184,22 @@ namespace StoreApp {
 			this->btnRefresh->Size = System::Drawing::Size(25, 25);
 			this->btnRefresh->TabIndex = 17;
 			this->btnRefresh->UseVisualStyleBackColor = false;
+			this->btnRefresh->Click += gcnew System::EventHandler(this, &WarehouseForm::btnRefresh_Click);
 			// 
-			// dataGridView1
+			// dgvListItems
 			// 
-			this->dataGridView1->AllowUserToAddRows = false;
-			this->dataGridView1->AllowUserToDeleteRows = false;
-			this->dataGridView1->AllowUserToOrderColumns = true;
-			this->dataGridView1->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
-			this->dataGridView1->Location = System::Drawing::Point(29, 130);
-			this->dataGridView1->Name = L"dataGridView1";
-			this->dataGridView1->ReadOnly = true;
-			this->dataGridView1->Size = System::Drawing::Size(742, 253);
-			this->dataGridView1->TabIndex = 18;
+			this->dgvListItems->AllowUserToAddRows = false;
+			this->dgvListItems->AllowUserToDeleteRows = false;
+			this->dgvListItems->AllowUserToOrderColumns = true;
+			this->dgvListItems->AutoSizeColumnsMode = System::Windows::Forms::DataGridViewAutoSizeColumnsMode::Fill;
+			this->dgvListItems->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
+			this->dgvListItems->Location = System::Drawing::Point(29, 130);
+			this->dgvListItems->Name = L"dgvListItems";
+			this->dgvListItems->ReadOnly = true;
+			this->dgvListItems->RowHeadersVisible = false;
+			this->dgvListItems->Size = System::Drawing::Size(742, 253);
+			this->dgvListItems->TabIndex = 18;
+			this->dgvListItems->CellMouseClick += gcnew System::Windows::Forms::DataGridViewCellMouseEventHandler(this, &WarehouseForm::dgvListItems_CellMouseClick);
 			// 
 			// btnAdd
 			// 
@@ -205,6 +215,7 @@ namespace StoreApp {
 			this->btnAdd->TabIndex = 19;
 			this->btnAdd->Text = L"Add";
 			this->btnAdd->UseVisualStyleBackColor = true;
+			this->btnAdd->Click += gcnew System::EventHandler(this, &WarehouseForm::btnAdd_Click);
 			// 
 			// btnPrint
 			// 
@@ -220,6 +231,7 @@ namespace StoreApp {
 			this->btnPrint->TabIndex = 20;
 			this->btnPrint->Text = L"Print";
 			this->btnPrint->UseVisualStyleBackColor = true;
+			this->btnPrint->Click += gcnew System::EventHandler(this, &WarehouseForm::btnPrint_Click);
 			// 
 			// btnDelete
 			// 
@@ -235,6 +247,7 @@ namespace StoreApp {
 			this->btnDelete->TabIndex = 21;
 			this->btnDelete->Text = L"Delete";
 			this->btnDelete->UseVisualStyleBackColor = true;
+			this->btnDelete->Click += gcnew System::EventHandler(this, &WarehouseForm::btnDelete_Click);
 			// 
 			// btnUpdate
 			// 
@@ -250,6 +263,7 @@ namespace StoreApp {
 			this->btnUpdate->TabIndex = 22;
 			this->btnUpdate->Text = L"Update";
 			this->btnUpdate->UseVisualStyleBackColor = true;
+			this->btnUpdate->Click += gcnew System::EventHandler(this, &WarehouseForm::btnUpdate_Click);
 			// 
 			// WarehouseForm
 			// 
@@ -260,7 +274,7 @@ namespace StoreApp {
 			this->Controls->Add(this->btnDelete);
 			this->Controls->Add(this->btnPrint);
 			this->Controls->Add(this->btnAdd);
-			this->Controls->Add(this->dataGridView1);
+			this->Controls->Add(this->dgvListItems);
 			this->Controls->Add(this->btnRefresh);
 			this->Controls->Add(this->tbSearch);
 			this->Controls->Add(this->pbSearch);
@@ -270,9 +284,10 @@ namespace StoreApp {
 			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::None;
 			this->Name = L"WarehouseForm";
 			this->Text = L"WarehouseForm";
+			this->Load += gcnew System::EventHandler(this, &WarehouseForm::WarehouseForm_Load);
 			this->pnlTop->ResumeLayout(false);
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pbSearch))->EndInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dgvListItems))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -282,19 +297,36 @@ namespace StoreApp {
 	public: bool logout = false;
 	private: bool dragging;
 	private: Point offset;
+	private: String^ selectedItem;
+	private: String^ connString = "datasource=127.0.0.1;port=3306;username=root;password=;database=storedb;";
+	private: MySqlConnection^ sqlConn = gcnew MySqlConnection(connString);
+
+	private: System::Void refreshDataTable(String^ query) {
+		try {
+			sqlConn->Open();
+			String^ sqlQuery = query;
+			MySqlDataAdapter^ sqlDataAdapter = gcnew MySqlDataAdapter(sqlQuery, sqlConn);
+			DataTable^ dataTable = gcnew DataTable();
+			sqlDataAdapter->Fill(dataTable);
+			dgvListItems->DataSource = dataTable;
+			sqlConn->Close();
+		}
+		catch (Exception^ e) {
+			MessageBox::Show(e->Message, "Failed to Load Data", MessageBoxButtons::OK);
+		}
+	}
+
 	private: System::Void pnlTop_MouseDown(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) {
 		dragging = true;
 		offset.X = e->X;
 		offset.Y = e->Y;
 	}
-
 	private: System::Void pnlTop_MouseMove(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) {
 		if (dragging) {
 			Point currentScreenPosition = PointToScreen(Point(e->X, e->Y));
 			Location = Point(currentScreenPosition.X - offset.X, currentScreenPosition.Y - offset.Y);
 		}
 	}
-
 	private: System::Void pnlTop_MouseUp(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) {
 		dragging = false;
 	}
@@ -306,6 +338,88 @@ namespace StoreApp {
 	private: System::Void btnLogout_Click(System::Object^ sender, System::EventArgs^ e) {
 		logout = true;
 		Close();
+	}
+	private: System::Void WarehouseForm_Load(System::Object^ sender, System::EventArgs^ e) {
+		refreshDataTable("SELECT name, stock, price FROM items;");
+		selectedItem = dgvListItems->Rows[0]->Cells[0]->Value->ToString();
+	}
+	private: System::Void dgvListItems_CellMouseClick(System::Object^ sender, System::Windows::Forms::DataGridViewCellMouseEventArgs^ e) {
+		selectedItem = dgvListItems->CurrentRow->Cells[0]->Value->ToString();
+	}
+
+	private: System::Void tbSearch_TextChanged(System::Object^ sender, System::EventArgs^ e) {
+		refreshDataTable("SELECT name, stock, price FROM items WHERE name LIKE '%" + tbSearch->Text + "%';");
+	}
+	private: System::Void btnAdd_Click(System::Object^ sender, System::EventArgs^ e) {
+		UpdateItemForm^ updateItemForm = gcnew UpdateItemForm("");
+		updateItemForm->ShowDialog();
+	}
+	private: System::Void btnUpdate_Click(System::Object^ sender, System::EventArgs^ e) {
+		UpdateItemForm^ updateItemForm = gcnew UpdateItemForm(selectedItem);
+		updateItemForm->ShowDialog();
+	}
+	private: System::Void btnDelete_Click(System::Object^ sender, System::EventArgs^ e) {
+		if ((MessageBox::Show("Are you sure want to delete this item?", "Delete Item", MessageBoxButtons::OKCancel)) == System::Windows::Forms::DialogResult::Cancel) {
+			return;
+		}
+
+		try {
+			sqlConn->Open();
+			String^ sqlQuery = "DELETE FROM items WHERE name=@name;";
+			MySqlCommand^ sqlComm = gcnew MySqlCommand(sqlQuery, sqlConn);
+			sqlComm->Parameters->AddWithValue("@name", selectedItem);
+			sqlComm->ExecuteNonQuery();
+			sqlConn->Close();
+		}
+		catch (Exception^ e) {
+			MessageBox::Show(e->Message, "Delete Item Failed", MessageBoxButtons::OK);
+		}
+
+		refreshDataTable("SELECT name, stock, price FROM items;");
+		tbSearch->Clear();
+		selectedItem = dgvListItems->Rows[0]->Cells[0]->Value->ToString();
+	}
+	private: System::Void btnPrint_Click(System::Object^ sender, System::EventArgs^ e) {
+		// Insert All Items to List Of Item
+		List<Item^>^ listPrintedItem = gcnew List<Item^>();
+		for (int i = 0; i < dgvListItems->RowCount; i++) {
+			String^ name = dgvListItems->Rows[i]->Cells[0]->Value->ToString();
+			int^ stock = Convert::ToInt32(dgvListItems->Rows[i]->Cells[1]->Value);
+			int^ price = Convert::ToInt32(dgvListItems->Rows[i]->Cells[2]->Value);
+			Item^ dump = gcnew Item(name, stock, price);
+			listPrintedItem->Add(dump);
+		}
+
+		// Sort List of Item
+		for (int i = 0; i < 100; i++) {
+			int min_idx = i;
+			for (int j = i + 1; j < listPrintedItem->Count; j++) {
+				if (String::Compare(listPrintedItem[min_idx]->name, listPrintedItem[j]->name) == true) {
+					min_idx = j;
+				}
+			}
+			if (min_idx != i) {
+				Item^ temp = gcnew Item(listPrintedItem[i]->name, listPrintedItem[i]->qty, listPrintedItem[i]->price);
+				listPrintedItem[i] = listPrintedItem[min_idx];
+				listPrintedItem[min_idx] = temp;
+			}
+		}
+
+		// Print List of Item
+		StreamWriter^ sw = gcnew StreamWriter("Test.txt");
+		sw->WriteLine("+----+------------------------------------------+-------------+---------------+");
+		sw->WriteLine("| No |               Nama Barang                |     Stok    |     Harga     |");
+		sw->WriteLine("+----+------------------------------------------+-------------+---------------+");
+		for (int i = 0; i < dgvListItems->RowCount; i++) {
+			sw->WriteLine(String::Format("|{0,-4}| {1,-41}|{2,12} |{3,14} |", i + 1, listPrintedItem[i]->name, listPrintedItem[i]->qty, listPrintedItem[i]->price));
+		}
+		sw->WriteLine("+----+------------------------------------------+-------------+---------------+\n");
+		sw->Close();
+	}
+	private: System::Void btnRefresh_Click(System::Object^ sender, System::EventArgs^ e) {
+		refreshDataTable("SELECT name, stock, price FROM items;");
+		tbSearch->Clear();
+		selectedItem = dgvListItems->Rows[0]->Cells[0]->Value->ToString();
 	}
 };
 }

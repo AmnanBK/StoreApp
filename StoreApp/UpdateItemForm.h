@@ -22,6 +22,21 @@ namespace StoreApp {
 			//TODO: Add the constructor code here
 			//
 		}
+		UpdateItemForm(String^ data)
+		{
+			InitializeComponent();
+			selectedItem = data;
+			if (selectedItem->Length == 0) {
+				lbTitle->Text = "Add Item";
+			}
+			else {
+				lbTitle->Text = "Update Item";
+			}
+			
+			//
+			//TODO: Add the constructor code here
+			//
+		}
 
 	protected:
 		/// <summary>
@@ -212,15 +227,15 @@ namespace StoreApp {
 			// 
 			// lbTitle
 			// 
-			this->lbTitle->AutoSize = true;
 			this->lbTitle->Font = (gcnew System::Drawing::Font(L"Segoe UI", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->lbTitle->Location = System::Drawing::Point(83, 33);
+			this->lbTitle->Location = System::Drawing::Point(0, 33);
 			this->lbTitle->Margin = System::Windows::Forms::Padding(20, 5, 20, 5);
 			this->lbTitle->Name = L"lbTitle";
-			this->lbTitle->Size = System::Drawing::Size(128, 30);
+			this->lbTitle->Size = System::Drawing::Size(300, 30);
 			this->lbTitle->TabIndex = 13;
 			this->lbTitle->Text = L"Update Item";
+			this->lbTitle->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
 			// 
 			// UpdateItemForm
 			// 
@@ -239,12 +254,12 @@ namespace StoreApp {
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->nudPrice))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->nudStock))->EndInit();
 			this->ResumeLayout(false);
-			this->PerformLayout();
 
 		}
 #pragma endregion
 	private: bool dragging;
 	private: Point offset;
+	private: String^ selectedItem;
 	private: System::Void pnlTop_MouseDown(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) {
 		dragging = true;
 		offset.X = e->X;
