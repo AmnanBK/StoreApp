@@ -11,6 +11,7 @@ namespace StoreApp {
 	using namespace System::Drawing;
 	using namespace MySql::Data::MySqlClient;
 	using namespace System::Collections::Generic;
+	using namespace System::IO;
 
 	/// <summary>
 	/// Summary for CashierForm
@@ -179,6 +180,7 @@ namespace StoreApp {
 			this->dgvListItem->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->dgvListItem->Location = System::Drawing::Point(29, 127);
 			this->dgvListItem->Margin = System::Windows::Forms::Padding(20, 3, 10, 10);
+			this->dgvListItem->MultiSelect = false;
 			this->dgvListItem->Name = L"dgvListItem";
 			this->dgvListItem->ReadOnly = true;
 			this->dgvListItem->RowHeadersVisible = false;
@@ -206,6 +208,7 @@ namespace StoreApp {
 			this->dgvPurchaseItem->RowHeadersVisible = false;
 			this->dgvPurchaseItem->Size = System::Drawing::Size(240, 304);
 			this->dgvPurchaseItem->TabIndex = 19;
+			this->dgvPurchaseItem->CellMouseClick += gcnew System::Windows::Forms::DataGridViewCellMouseEventHandler(this, &CashierForm::dgvPurchaseItem_CellMouseClick);
 			// 
 			// name
 			// 
@@ -313,6 +316,7 @@ namespace StoreApp {
 			this->btnDelete->TabIndex = 28;
 			this->btnDelete->Text = L"Delete";
 			this->btnDelete->UseVisualStyleBackColor = true;
+			this->btnDelete->Click += gcnew System::EventHandler(this, &CashierForm::btnDelete_Click);
 			// 
 			// btnPrint
 			// 
@@ -328,6 +332,7 @@ namespace StoreApp {
 			this->btnPrint->TabIndex = 27;
 			this->btnPrint->Text = L"Print";
 			this->btnPrint->UseVisualStyleBackColor = true;
+			this->btnPrint->Click += gcnew System::EventHandler(this, &CashierForm::btnPrint_Click);
 			// 
 			// lbPriceItem
 			// 
@@ -400,6 +405,7 @@ namespace StoreApp {
 	private: bool dragging;
 	private: Point offset;
 	private: String^ selectedItem;
+	private: String^ selectedPurchaseItem;
 	private: String^ selectedPrice;
 	private: List<Item^>^ listPurchaseItem = gcnew List<Item^>();
 	private: String^ connString = "datasource=127.0.0.1;port=3306;username=root;password=;database=storedb;";
@@ -447,9 +453,12 @@ namespace StoreApp {
 
 	private: System::Void updatePurchaseTable(List<Item^>^ data) {
 		dgvPurchaseItem->Rows->Clear();
+		int sum = 0;
 		for (int i = 0; i < data->Count; i++) {
 			dgvPurchaseItem->Rows->Add(data[i]->name, data[i]->qty);
+			sum += data[i]->qty * data[i]->price;
 		}
+		lbSumPrice->Text = sum.ToString();
 	}
 
 	private: System::Void pnlTop_MouseDown(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) {
@@ -519,5 +528,33 @@ namespace StoreApp {
 			}
 		}
 	}
-};
+	private: System::Void dgvPurchaseItem_CellMouseClick(System::Object^ sender, System::Windows::Forms::DataGridViewCellMouseEventArgs^ e) {
+		selectedPurchaseItem = dgvPurchaseItem->CurrentRow->Cells[0]->Value->ToString();
+	}
+	private: System::Void btnDelete_Click(System::Object^ sender, System::EventArgs^ e) {
+		for (int i = 0; i < listPurchaseItem->Count; i++) {
+			if (listPurchaseItem[i]->name == selectedPurchaseItem) {
+				listPurchaseItem->RemoveAt(i);
+				updatePurchaseTable(listPurchaseItem);
+			}
+		}
+	}
+	private: System::Void btnPrint_Click(System::Object^ sender, System::EventArgs^ e) {
+		StreamWriter^ sw = gcnew StreamWriter("Struk.txt");
+		sw->WriteLine("------------------------------------");
+		sw->WriteLine("####  Struk Mini Market ILKOOM  ####");
+		sw->WriteLine("------------------------------------");
+		for (int i = 0; i < listPurchaseItem->Count; i++) {
+			int itemQty = listPurchaseItem[i]->qty;
+			int itemPrice = listPurchaseItem[i]->price;
+			sw->WriteLine(String::Format("{0, -50}", listPurchaseItem[i]->name));
+			sw->WriteLine(String::Format("{0,-10}X{1,10}{2,12}", itemQty, itemPrice, itemQty * itemPrice));
+		}
+		sw->WriteLine("------------------------------------");
+		sw->WriteLine("{0,-10}={1,10}{2,12}", "Total", "", lbSumPrice->Text);
+		sw->Close();
+		listPurchaseItem->Clear();
+		updatePurchaseTable(listPurchaseItem);
+	}
+	};
 }
