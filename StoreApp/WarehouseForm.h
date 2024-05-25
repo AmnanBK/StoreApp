@@ -426,7 +426,7 @@ namespace StoreApp {
 		}
 
 		// Print List of Item
-		StreamWriter^ sw = gcnew StreamWriter("Test.txt");
+		StreamWriter^ sw = gcnew StreamWriter(DateTime::Now.ToString("ddMMyyyy_hhmmss") + "_Stock.txt");
 		sw->WriteLine("+----+------------------------------------------+-------------+---------------+");
 		sw->WriteLine("| No |               Nama Barang                |     Stok    |     Harga     |");
 		sw->WriteLine("+----+------------------------------------------+-------------+---------------+");

@@ -299,18 +299,18 @@ namespace StoreApp {
 				String^ role = sqlReader->GetString(2);
 				if (role == "Admin") {
 					switchForm = 1;
-					MessageBox::Show("Login as admin", "Login Success", MessageBoxButtons::OK);
+					//MessageBox::Show("Login as admin", "Login Success", MessageBoxButtons::OK);
 				}
 				else if (role == "Staff Gudang") {
 					switchForm = 2;
-					MessageBox::Show("Login as staff gudang", "Login Success", MessageBoxButtons::OK);
+					//MessageBox::Show("Login as staff gudang", "Login Success", MessageBoxButtons::OK);
 				}
 				else if (role == "Staff Kasir") {
 					switchForm = 3;
-					MessageBox::Show("Login as staff kasir", "Login Success", MessageBoxButtons::OK);
+					//MessageBox::Show("Login as staff kasir", "Login Success", MessageBoxButtons::OK);
 				}
 				else {
-					MessageBox::Show("Login as unidentified role", "Login Success", MessageBoxButtons::OK);
+					//MessageBox::Show("Login as unidentified role", "Login Success", MessageBoxButtons::OK);
 				}
 			}
 			else {

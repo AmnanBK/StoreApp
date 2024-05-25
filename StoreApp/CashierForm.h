@@ -571,12 +571,11 @@ namespace StoreApp {
 		}
 	}
 	private: System::Void btnPrint_Click(System::Object^ sender, System::EventArgs^ e) {
-		String^ dateNow = DateTime::Now.ToString();
-		StreamWriter^ sw = gcnew StreamWriter("Struk.txt");
+		StreamWriter^ sw = gcnew StreamWriter(DateTime::Now.ToString("ddMMyyyy_hhmmss") +  "_Struck.txt");
 		sw->WriteLine("------------------------------------");
 		sw->WriteLine("####        TOKO FLOVER         ####");
 		sw->WriteLine("------------------------------------");
-		sw->WriteLine(String::Format("{0,8}{1,-20}{2,8}", "", dateNow, ""));
+		sw->WriteLine(String::Format("{0,8}{1,-20}{2,8}", "", DateTime::Now.ToString(""), ""));
 		sw->WriteLine("------------------------------------");
 		for (int i = 0; i < listPurchaseItem->Count; i++) {
 			int itemQty = listPurchaseItem[i]->qty;
