@@ -318,53 +318,67 @@ namespace StoreApp {
 		}
 	}
 
-	private: System::Void pnlTop_MouseDown(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) {
+	private: System::String^ formatCurrency(int data) {
+		String^ formatted = data.ToString();
+		int sizeString = formatted->Length;
+		if (sizeString > 3 && sizeString < 7) {
+			formatted = formatted->Insert(sizeString - 3, ",");
+		}
+		else if (sizeString > 6 && sizeString < 10) {
+			formatted = formatted->Insert(sizeString - 3, ",");
+			formatted = formatted->Insert(sizeString - 6, ",");
+		}
+		return formatted;
+	}
+
+
+	private: System::Void pnlTop_MouseDown(System::Object ^ sender, System::Windows::Forms::MouseEventArgs ^ e) {
 		dragging = true;
 		offset.X = e->X;
 		offset.Y = e->Y;
 	}
-	private: System::Void pnlTop_MouseMove(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) {
+	private: System::Void pnlTop_MouseMove(System::Object ^ sender, System::Windows::Forms::MouseEventArgs ^ e) {
 		if (dragging) {
 			Point currentScreenPosition = PointToScreen(Point(e->X, e->Y));
 			Location = Point(currentScreenPosition.X - offset.X, currentScreenPosition.Y - offset.Y);
 		}
 	}
-	private: System::Void pnlTop_MouseUp(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) {
+	private: System::Void pnlTop_MouseUp(System::Object ^ sender, System::Windows::Forms::MouseEventArgs ^ e) {
 		dragging = false;
 	}
 
-	private: System::Void btnExit_Click(System::Object^ sender, System::EventArgs^ e) {
+	private: System::Void btnExit_Click(System::Object ^ sender, System::EventArgs ^ e) {
 		exitProgram = true;
 		Close();
 	}
-	private: System::Void btnLogout_Click(System::Object^ sender, System::EventArgs^ e) {
+	private: System::Void btnLogout_Click(System::Object ^ sender, System::EventArgs ^ e) {
 		logout = true;
 		Close();
 	}
-	private: System::Void WarehouseForm_Load(System::Object^ sender, System::EventArgs^ e) {
+	private: System::Void WarehouseForm_Load(System::Object ^ sender, System::EventArgs ^ e) {
 		refreshDataTable("SELECT name, stock, price FROM items;");
 		selectedItem = dgvListItems->Rows[0]->Cells[0]->Value->ToString();
 		selectedStock = dgvListItems->Rows[0]->Cells[1]->Value->ToString();
 		selectedPrice = dgvListItems->Rows[0]->Cells[2]->Value->ToString();
 	}
-	private: System::Void dgvListItems_CellMouseClick(System::Object^ sender, System::Windows::Forms::DataGridViewCellMouseEventArgs^ e) {
+	private: System::Void dgvListItems_CellMouseClick(System::Object ^ sender, System::Windows::Forms::DataGridViewCellMouseEventArgs ^ e) {
 		selectedItem = dgvListItems->CurrentRow->Cells[0]->Value->ToString();
 		selectedStock = dgvListItems->CurrentRow->Cells[1]->Value->ToString();
 		selectedPrice = dgvListItems->CurrentRow->Cells[2]->Value->ToString();
 	}
 
-	private: System::Void tbSearch_TextChanged(System::Object^ sender, System::EventArgs^ e) {
+	private: System::Void tbSearch_TextChanged(System::Object ^ sender, System::EventArgs ^ e) {
 		refreshDataTable("SELECT name, stock, price FROM items WHERE name LIKE '%" + tbSearch->Text + "%';");
 	}
-	private: System::Void btnAdd_Click(System::Object^ sender, System::EventArgs^ e) {
+	private: System::Void btnAdd_Click(System::Object ^ sender, System::EventArgs ^ e) {
 		UpdateItemForm^ updateItemForm = gcnew UpdateItemForm("", "", "");
 		updateItemForm->ShowDialog();
 	}
-	private: System::Void btnUpdate_Click(System::Object^ sender, System::EventArgs^ e) {
+	private: System::Void btnUpdate_Click(System::Object ^ sender, System::EventArgs ^ e) {
 		UpdateItemForm^ updateItemForm = gcnew UpdateItemForm(selectedItem, selectedStock, selectedPrice);
 		updateItemForm->ShowDialog();
 	}
-	private: System::Void btnDelete_Click(System::Object^ sender, System::EventArgs^ e) {
+	private: System::Void btnDelete_Click(System::Object ^ sender, System::EventArgs ^ e) {
 		if ((MessageBox::Show("Are you sure want to delete this item?", "Delete Item", MessageBoxButtons::OKCancel)) == System::Windows::Forms::DialogResult::Cancel) {
 			return;
 		}
@@ -385,7 +399,7 @@ namespace StoreApp {
 		tbSearch->Clear();
 		selectedItem = dgvListItems->Rows[0]->Cells[0]->Value->ToString();
 	}
-	private: System::Void btnPrint_Click(System::Object^ sender, System::EventArgs^ e) {
+	private: System::Void btnPrint_Click(System::Object ^ sender, System::EventArgs ^ e) {
 		// Insert All Items to List Of Item
 		List<Item^>^ listPrintedItem = gcnew List<Item^>();
 		for (int i = 0; i < dgvListItems->RowCount; i++) {
@@ -417,17 +431,17 @@ namespace StoreApp {
 		sw->WriteLine("| No |               Nama Barang                |     Stok    |     Harga     |");
 		sw->WriteLine("+----+------------------------------------------+-------------+---------------+");
 		for (int i = 0; i < dgvListItems->RowCount; i++) {
-			sw->WriteLine(String::Format("|{0,-4}| {1,-41}|{2,12} |{3,14} |", i + 1, listPrintedItem[i]->name, listPrintedItem[i]->qty, listPrintedItem[i]->price));
+			sw->WriteLine(String::Format("|{0,-4}| {1,-41}|{2,12} |{3,14} |", i + 1, listPrintedItem[i]->name, listPrintedItem[i]->qty, formatCurrency(listPrintedItem[i]->price)));
 		}
 		sw->WriteLine("+----+------------------------------------------+-------------+---------------+\n");
 		sw->Close();
 	}
-	private: System::Void btnRefresh_Click(System::Object^ sender, System::EventArgs^ e) {
+	private: System::Void btnRefresh_Click(System::Object ^ sender, System::EventArgs ^ e) {
 		refreshDataTable("SELECT name, stock, price FROM items;");
 		tbSearch->Clear();
 		selectedItem = dgvListItems->Rows[0]->Cells[0]->Value->ToString();
 		selectedStock = dgvListItems->Rows[0]->Cells[1]->Value->ToString();
 		selectedPrice = dgvListItems->Rows[0]->Cells[2]->Value->ToString();
 	}
-};
-}
+	};
+	}

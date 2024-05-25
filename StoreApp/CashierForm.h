@@ -76,6 +76,8 @@ namespace StoreApp {
 
 
 
+
+
 	private:
 		/// <summary>
 		/// Required designer variable.
@@ -467,7 +469,20 @@ namespace StoreApp {
 			dgvPurchaseItem->Rows->Add(data[i]->name, data[i]->qty);
 			sum += data[i]->qty * data[i]->price;
 		}
-		lbSumPrice->Text = sum.ToString();
+		lbSumPrice->Text = formatCurrency(sum);
+	}
+
+	private: System::String^ formatCurrency(int data) {
+		String^ formatted = data.ToString();
+		int sizeString = formatted->Length;
+		if (sizeString > 3 && sizeString < 7) {
+			formatted = formatted->Insert(sizeString - 3, ",");
+		}
+		else if (sizeString > 6 && sizeString < 10) {
+			formatted = formatted->Insert(sizeString - 3, ",");
+			formatted = formatted->Insert(sizeString - 6, ",");
+		}
+		return formatted;
 	}
 
 	private: System::Void pnlTop_MouseDown(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) {
@@ -556,18 +571,21 @@ namespace StoreApp {
 		}
 	}
 	private: System::Void btnPrint_Click(System::Object^ sender, System::EventArgs^ e) {
+		String^ dateNow = DateTime::Now.ToString();
 		StreamWriter^ sw = gcnew StreamWriter("Struk.txt");
 		sw->WriteLine("------------------------------------");
-		sw->WriteLine("####  Struk Mini Market ILKOOM  ####");
+		sw->WriteLine("####        TOKO FLOVER         ####");
+		sw->WriteLine("------------------------------------");
+		sw->WriteLine(String::Format("{0,8}{1,-20}{2,8}", "", dateNow, ""));
 		sw->WriteLine("------------------------------------");
 		for (int i = 0; i < listPurchaseItem->Count; i++) {
 			int itemQty = listPurchaseItem[i]->qty;
 			int itemPrice = listPurchaseItem[i]->price;
 			sw->WriteLine(String::Format("{0, -50}", listPurchaseItem[i]->name));
-			sw->WriteLine(String::Format("{0,-10}X{1,10}{2,12}", itemQty, itemPrice, itemQty * itemPrice));
+			sw->WriteLine(String::Format("{0,-10}X{1,10}{2,14}", itemQty, formatCurrency(itemPrice), formatCurrency(itemQty * itemPrice)));
 		}
 		sw->WriteLine("------------------------------------");
-		sw->WriteLine("{0,-10}={1,10}{2,12}", "Total", "", lbSumPrice->Text);
+		sw->WriteLine("{0,-10}={1,10}{2,14}", "Total", "", lbSumPrice->Text);
 		sw->Close();
 		listPurchaseItem->Clear();
 		updatePurchaseTable(listPurchaseItem);
