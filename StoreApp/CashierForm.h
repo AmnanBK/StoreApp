@@ -426,6 +426,29 @@ namespace StoreApp {
 		}
 	}
 
+	private: System::Int32 getItemStock(String^ itemName) {
+		int stock;
+		try {
+			sqlConn->Open();
+			String^ sqlQuery = "SELECT stock FROM items WHERE name=@name;";
+			MySqlCommand^ sqlComm = gcnew MySqlCommand(sqlQuery, sqlConn);
+			sqlComm->Parameters->AddWithValue("@name", itemName);
+			MySqlDataReader^ sqlReader = sqlComm->ExecuteReader();
+
+			if (sqlReader->Read()) {
+				stock = sqlReader->GetInt32(0);
+				sqlConn->Close();
+				return stock;
+			}
+			else {
+				return -1;
+			}
+		}
+		catch (Exception^ e) {
+			MessageBox::Show(e->Message, "Failed To Get Stock", MessageBoxButtons::OK);
+		}
+	}
+
 	private: System::Void updateSelected() {
 		if (dgvListItem->RowCount > 0) {
 			selectedItem = dgvListItem->CurrentRow->Cells[0]->Value->ToString();
@@ -433,21 +456,7 @@ namespace StoreApp {
 			lbNameItem->Text = selectedItem;
 			lbPriceItem->Text = selectedPrice;
 			nudQty->Value = 1;
-			try {
-				sqlConn->Open();
-				String^ sqlQuery = "SELECT stock FROM items WHERE name=@name;";
-				MySqlCommand^ sqlComm = gcnew MySqlCommand(sqlQuery, sqlConn);
-				sqlComm->Parameters->AddWithValue("@name", selectedItem);
-				MySqlDataReader^ sqlReader = sqlComm->ExecuteReader();
-
-				if (sqlReader->Read()) {
-					nudQty->Maximum = sqlReader->GetInt32(0);
-				}
-				sqlConn->Close();
-			}
-			catch (Exception^ e) {
-				MessageBox::Show(e->Message, "Error", MessageBoxButtons::OK);
-			}
+			nudQty->Maximum = getItemStock(selectedItem);
 		}
 	}
 
@@ -518,8 +527,15 @@ namespace StoreApp {
 			}
 
 			if (duplicate) {
-				listPurchaseItem[indeksDuplicate]->qty += quantity;
-				updatePurchaseTable(listPurchaseItem);
+				int maxPurchase = getItemStock(selectedItem);
+				if (listPurchaseItem[indeksDuplicate]->qty + quantity > maxPurchase) {
+					MessageBox::Show("Out of Stock", "Out of Stock", MessageBoxButtons::OK);
+					return;
+				}
+				else {
+					listPurchaseItem[indeksDuplicate]->qty += quantity;
+					updatePurchaseTable(listPurchaseItem);
+				}
 			}
 			else {
 				Item^ dump = gcnew Item(selectedItem, quantity, Convert::ToInt32(selectedPrice));
