@@ -587,6 +587,22 @@ namespace StoreApp {
 		sw->WriteLine("------------------------------------");
 		sw->WriteLine("{0,-10}={1,10}{2,14}", "Total", "", lbSumPrice->Text);
 		sw->Close();
+
+		try {
+			for (int i = 0; i < listPurchaseItem->Count; i++) {
+				sqlConn->Open();
+				String^ sqlQuery = "UPDATE items SET stock=(stock-@stock) WHERE name=@currentName;";
+				MySqlCommand sqlComm(sqlQuery, sqlConn);
+				sqlComm.Parameters->AddWithValue("@stock", listPurchaseItem[i]->qty);
+				sqlComm.Parameters->AddWithValue("@currentName", listPurchaseItem[i] ->name);
+				sqlComm.ExecuteNonQuery();
+				sqlConn->Close();
+			}
+		}
+		catch (Exception^ e) {
+			MessageBox::Show(e->Message, "Update Stock Failed", MessageBoxButtons::OK);
+		}
+
 		listPurchaseItem->Clear();
 		updatePurchaseTable(listPurchaseItem);
 	}
