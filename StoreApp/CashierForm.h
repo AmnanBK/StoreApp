@@ -282,7 +282,6 @@ namespace StoreApp {
 			this->nudQty->Location = System::Drawing::Point(44, 158);
 			this->nudQty->Margin = System::Windows::Forms::Padding(3, 3, 3, 10);
 			this->nudQty->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 1000, 0, 0, 0 });
-			this->nudQty->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 1, 0, 0, 0 });
 			this->nudQty->Name = L"nudQty";
 			this->nudQty->Size = System::Drawing::Size(148, 27);
 			this->nudQty->TabIndex = 30;
@@ -457,8 +456,14 @@ namespace StoreApp {
 			selectedPrice = dgvListItem->CurrentRow->Cells[1]->Value->ToString();
 			lbNameItem->Text = selectedItem;
 			lbPriceItem->Text = selectedPrice;
-			nudQty->Value = 1;
-			nudQty->Maximum = getItemStock(selectedItem);
+			int nudMax = getItemStock(selectedItem);
+			if (nudMax == 0) {
+				nudQty->Value = 0;
+			}
+			else {
+				nudQty->Value = 0;
+			}
+			nudQty->Maximum = nudMax;
 		}
 	}
 
@@ -524,6 +529,11 @@ namespace StoreApp {
 	private: System::Void btnAdd_Click(System::Object^ sender, System::EventArgs^ e) {
 		int quantity = Convert::ToInt32(nudQty->Value);
 		int sizeOfList = listPurchaseItem->Count;
+
+		if (quantity == 0) {
+			MessageBox::Show("Minimum purchase quantity is 1", "Invalid Quantity", MessageBoxButtons::OK);
+			return;
+		}
 
 		if (sizeOfList == 0) {
 			Item^ dump = gcnew Item(selectedItem, quantity, Convert::ToInt32(selectedPrice));
@@ -604,6 +614,7 @@ namespace StoreApp {
 
 		listPurchaseItem->Clear();
 		updatePurchaseTable(listPurchaseItem);
+		updateSelected();
 	}
 	};
 }
