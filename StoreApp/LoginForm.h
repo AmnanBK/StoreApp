@@ -9,6 +9,8 @@ namespace StoreApp {
 	using namespace System::Data;
 	using namespace System::Drawing;
 	using namespace MySql::Data::MySqlClient;
+	using namespace System::IO::Ports;
+	using namespace System::Threading;
 
 	/// <summary>
 	/// Summary for LoginForm
@@ -55,6 +57,8 @@ namespace StoreApp {
 	private: System::Windows::Forms::Label^ lbPassword;
 
 	private: System::Windows::Forms::Button^ btnLogin;
+	private: System::Windows::Forms::Timer^ tmrLogin;
+	private: System::ComponentModel::IContainer^ components;
 
 	protected:
 
@@ -65,7 +69,7 @@ namespace StoreApp {
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
-		System::ComponentModel::Container^ components;
+
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -74,6 +78,7 @@ namespace StoreApp {
 		/// </summary>
 		void InitializeComponent(void)
 		{
+			this->components = (gcnew System::ComponentModel::Container());
 			System::ComponentModel::ComponentResourceManager^ resources = (gcnew System::ComponentModel::ComponentResourceManager(LoginForm::typeid));
 			this->pnlTop = (gcnew System::Windows::Forms::Panel());
 			this->btnExit = (gcnew System::Windows::Forms::Button());
@@ -86,6 +91,7 @@ namespace StoreApp {
 			this->pbUsername = (gcnew System::Windows::Forms::PictureBox());
 			this->lbUsername = (gcnew System::Windows::Forms::Label());
 			this->lbTitle = (gcnew System::Windows::Forms::Label());
+			this->tmrLogin = (gcnew System::Windows::Forms::Timer(this->components));
 			this->pnlTop->SuspendLayout();
 			this->pnlLogin->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pbPassword))->BeginInit();
@@ -230,6 +236,11 @@ namespace StoreApp {
 			this->lbTitle->TabIndex = 0;
 			this->lbTitle->Text = L"LOGIN";
 			// 
+			// tmrLogin
+			// 
+			this->tmrLogin->Enabled = true;
+			//this->tmrLogin->Tick += gcnew System::EventHandler(this, &LoginForm::tmrLogin_Tick);
+			// 
 			// LoginForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -242,6 +253,7 @@ namespace StoreApp {
 			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::None;
 			this->Name = L"LoginForm";
 			this->Text = L"LoginForm";
+			this->Load += gcnew System::EventHandler(this, &LoginForm::LoginForm_Load);
 			this->pnlTop->ResumeLayout(false);
 			this->pnlLogin->ResumeLayout(false);
 			this->pnlLogin->PerformLayout();
@@ -257,6 +269,45 @@ namespace StoreApp {
 	private: Point offset;
 	private: String^ connString = "datasource=127.0.0.1;port=3306;username=root;password=;database=storedb;";
 	private: MySqlConnection^ sqlConn = gcnew MySqlConnection(connString);
+	private: SerialPort^ serialPort = gcnew SerialPort("COM6", 9600);
+	private: delegate System::Void UpdateVariableDelegate(int value);
+	private: Thread^ serialReadThread = gcnew Thread(gcnew ThreadStart(this, &LoginForm::ContinuousSerialRead));
+
+	private: System::Void UpdateVariable(int value) {
+		switchForm = value;
+		Hide();
+	}
+
+	private: System::Void ContinuousSerialRead() {
+		while (switchForm == 0) {
+			array<String^>^ portNames = SerialPort::GetPortNames();
+			for each (String ^ portName in portNames) {
+				if (portName->Equals("COM6", StringComparison::OrdinalIgnoreCase)) {
+					try {
+						serialPort->Open();
+						String^ scanned = serialPort->ReadLine()->Trim();
+						UpdateVariableDelegate^ updateDelegate = gcnew UpdateVariableDelegate(this, &LoginForm::UpdateVariable);
+						if (scanned == "179546548") {
+							this->Invoke(updateDelegate, 1);
+						}
+						else if (scanned == "131243748") {
+							this->Invoke(updateDelegate, 2);
+						}
+						else if (scanned == "147992242") {
+							this->Invoke(updateDelegate, 3);
+						}
+						serialPort->Close();
+					}
+					catch (Exception^ e) {
+						//MessageBox::Show(e->Message, "Error Read Serial Port", MessageBoxButtons::OK);
+						continue;
+					}
+					Thread::Sleep(100);
+				}
+			}
+		}
+	}
+
 	private: System::Void pnlTop_MouseDown(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) {
 		dragging = true;
 		offset.X = e->X;
@@ -278,6 +329,7 @@ namespace StoreApp {
 		exitProgram = true;
 		Close();
 	}
+
 	private: System::Void btnLogin_Click(System::Object^ sender, System::EventArgs^ e) {
 		String^ username = tbUsername->Text;
 		String^ password = tbPassword->Text;
@@ -299,31 +351,33 @@ namespace StoreApp {
 				String^ role = sqlReader->GetString(2);
 				if (role == "Admin") {
 					switchForm = 1;
-					//MessageBox::Show("Login as admin", "Login Success", MessageBoxButtons::OK);
 				}
 				else if (role == "Staff Gudang") {
 					switchForm = 2;
-					//MessageBox::Show("Login as staff gudang", "Login Success", MessageBoxButtons::OK);
 				}
 				else if (role == "Staff Kasir") {
 					switchForm = 3;
-					//MessageBox::Show("Login as staff kasir", "Login Success", MessageBoxButtons::OK);
-				}
-				else {
-					//MessageBox::Show("Login as unidentified role", "Login Success", MessageBoxButtons::OK);
 				}
 			}
 			else {
 				MessageBox::Show("Username or password is incorrect", "Login Failed", MessageBoxButtons::OK);
 				sqlConn->Close();
+				serialPort->Close();
 				return;
 			}
 			sqlConn->Close();
-			Close();
+			serialPort->Close();
+			Hide();
 		}
 		catch (Exception^ e) {
 			MessageBox::Show(e->Message, "Failed to Connect", MessageBoxButtons::OK);
 		}
 	}
+
+	private: System::Void LoginForm_Load(System::Object^ sender, System::EventArgs^ e) {
+		serialReadThread->IsBackground = true;
+		serialReadThread->Start();
+	}
+
 	};
 }

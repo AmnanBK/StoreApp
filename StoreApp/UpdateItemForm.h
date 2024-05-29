@@ -281,6 +281,7 @@ namespace StoreApp {
 			MySqlCommand^ sqlComm = gcnew MySqlCommand(sqlQuery, sqlConn);
 			sqlComm->ExecuteNonQuery();
 			sqlConn->Close();
+			MessageBox::Show("Succes", "Update Item Succes", MessageBoxButtons::OK);
 		}
 		catch (Exception^ e) {
 			MessageBox::Show(e->Message, "Failed to Update", MessageBoxButtons::OK);
@@ -309,13 +310,11 @@ namespace StoreApp {
 		if (lbTitle->Text == "Add Item") {
 			String^ sqlQuery = "INSERT INTO items (name, stock, price) VALUES ('" + name + "', '" + stock + "', '" + price + "');";
 			updateItem(sqlQuery);
-			MessageBox::Show("Succesfully add an item", "Add Item Succes", MessageBoxButtons::OK);
 		}
 
 		if (lbTitle->Text == "Update Item") {
 			String^ sqlQuery = "UPDATE items SET name='" + name + "', stock='" + stock + "', price='" + price + "' WHERE name='" + selectedItem + "';";
 			updateItem(sqlQuery);
-			MessageBox::Show("Succesfully update an item", "Update Item Succes", MessageBoxButtons::OK);
 		}
 
 		Close();
