@@ -12,6 +12,8 @@ namespace StoreApp {
 	using namespace MySql::Data::MySqlClient;
 	using namespace System::Collections::Generic;
 	using namespace System::IO;
+	using namespace System::IO::Ports;
+
 
 	/// <summary>
 	/// Summary for CashierForm
@@ -411,6 +413,7 @@ namespace StoreApp {
 	private: List<Item^>^ listPurchaseItem = gcnew List<Item^>();
 	private: String^ connString = "datasource=127.0.0.1;port=3306;username=root;password=;database=storedb;";
 	private: MySqlConnection^ sqlConn = gcnew MySqlConnection(connString);
+	private: SerialPort^ serialPort = gcnew SerialPort("COM6", 115200);
 
 	private: System::Void refreshDataTable(String^ query) {
 		try {
@@ -512,6 +515,9 @@ namespace StoreApp {
 		Close();
 	}
 	private: System::Void btnLogout_Click(System::Object^ sender, System::EventArgs^ e) {
+		serialPort->Open();
+		serialPort->WriteLine("0");
+		serialPort->Close();
 		logout = true;
 		Close();
 	}
@@ -568,6 +574,9 @@ namespace StoreApp {
 				updatePurchaseTable(listPurchaseItem);
 			}
 		}
+		serialPort->Open();
+		serialPort->WriteLine(selectedItem + "~" + lbSumPrice->Text);
+		serialPort->Close();
 	}
 	private: System::Void dgvPurchaseItem_CellMouseClick(System::Object^ sender, System::Windows::Forms::DataGridViewCellMouseEventArgs^ e) {
 		selectedPurchaseItem = dgvPurchaseItem->CurrentRow->Cells[0]->Value->ToString();
@@ -579,6 +588,9 @@ namespace StoreApp {
 				updatePurchaseTable(listPurchaseItem);
 			}
 		}
+		serialPort->Open();
+		serialPort->WriteLine(selectedItem + "~" + lbSumPrice->Text);
+		serialPort->Close();
 	}
 	private: System::Void btnPrint_Click(System::Object^ sender, System::EventArgs^ e) {
 		StreamWriter^ sw = gcnew StreamWriter(DateTime::Now.ToString("ddMMyyyy_hhmmss") +  "_Struck.txt");
@@ -615,6 +627,9 @@ namespace StoreApp {
 		listPurchaseItem->Clear();
 		updatePurchaseTable(listPurchaseItem);
 		updateSelected();
+		serialPort->Open();
+		serialPort->WriteLine("0");
+		serialPort->Close();
 	}
 	};
 }

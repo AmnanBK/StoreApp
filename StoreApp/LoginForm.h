@@ -269,7 +269,7 @@ namespace StoreApp {
 	private: Point offset;
 	private: String^ connString = "datasource=127.0.0.1;port=3306;username=root;password=;database=storedb;";
 	private: MySqlConnection^ sqlConn = gcnew MySqlConnection(connString);
-	private: SerialPort^ serialPort = gcnew SerialPort("COM6", 9600);
+	private: SerialPort^ serialPort = gcnew SerialPort("COM6", 115200);
 	private: delegate System::Void UpdateVariableDelegate(int value);
 	private: Thread^ serialReadThread = gcnew Thread(gcnew ThreadStart(this, &LoginForm::ContinuousSerialRead));
 

@@ -400,6 +400,11 @@ namespace StoreApp {
 		selectedItem = dgvListItems->Rows[0]->Cells[0]->Value->ToString();
 	}
 	private: System::Void btnPrint_Click(System::Object ^ sender, System::EventArgs ^ e) {
+		refreshDataTable("SELECT name, stock, price FROM items;");
+		tbSearch->Clear();
+		selectedItem = dgvListItems->Rows[0]->Cells[0]->Value->ToString();
+		selectedStock = dgvListItems->Rows[0]->Cells[1]->Value->ToString();
+		selectedPrice = dgvListItems->Rows[0]->Cells[2]->Value->ToString();
 		// Insert All Items to List Of Item
 		List<Item^>^ listPrintedItem = gcnew List<Item^>();
 		for (int i = 0; i < dgvListItems->RowCount; i++) {
@@ -410,7 +415,7 @@ namespace StoreApp {
 			listPrintedItem->Add(dump);
 		}
 
-		// Sort List of Item
+		// Sort List of Item with Selection Sort
 		for (int i = 0; i < 100; i++) {
 			int min_idx = i;
 			for (int j = i + 1; j < listPrintedItem->Count; j++) {

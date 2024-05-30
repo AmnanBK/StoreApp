@@ -307,16 +307,32 @@ namespace StoreApp {
 		String^ stock = nudStock->Text;
 		String^ price = nudPrice->Text;
 
-		if (lbTitle->Text == "Add Item") {
-			String^ sqlQuery = "INSERT INTO items (name, stock, price) VALUES ('" + name + "', '" + stock + "', '" + price + "');";
-			updateItem(sqlQuery);
-		}
-
 		if (lbTitle->Text == "Update Item") {
 			String^ sqlQuery = "UPDATE items SET name='" + name + "', stock='" + stock + "', price='" + price + "' WHERE name='" + selectedItem + "';";
 			updateItem(sqlQuery);
 		}
 
+		if (lbTitle->Text == "Add Item") {
+			try {
+				sqlConn->Open();
+				String^ sqlQuery = "SELECT name FROM items WHERE name='" + name + "'";
+				MySqlCommand^ sqlComm = gcnew MySqlCommand(sqlQuery, sqlConn);
+				MySqlDataReader^ sqlReader = sqlComm->ExecuteReader();
+				if (sqlReader->Read()) {
+					MessageBox::Show("Item name already exist", "Duplicate Item", MessageBoxButtons::OK);
+					sqlConn->Close();
+					return;
+				}
+				else {
+					sqlConn->Close();
+					String^ sqlQuery = "INSERT INTO items (name, stock, price) VALUES ('" + name + "', '" + stock + "', '" + price + "');";
+					updateItem(sqlQuery);
+				}
+			}
+			catch (Exception^ e) {
+				MessageBox::Show(e->Message, "Failed to Check Name", MessageBoxButtons::OK);
+			}
+		}
 		Close();
 
 	}
@@ -328,6 +344,9 @@ namespace StoreApp {
 			tbName->Text = selectedItem;
 			nudStock->Text = selectedStock;
 			nudPrice->Text = selectedPrice;
+		}
+		else {
+			btnUpdate->Text = "Add";
 		}
 	}
 	};
