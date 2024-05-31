@@ -574,9 +574,15 @@ namespace StoreApp {
 				updatePurchaseTable(listPurchaseItem);
 			}
 		}
-		serialPort->Open();
-		serialPort->WriteLine(selectedItem + "~" + lbSumPrice->Text);
-		serialPort->Close();
+		array<String^>^ portNames = SerialPort::GetPortNames();
+		for each (String ^ portName in portNames) {
+			if (portName->Equals("COM6", StringComparison::OrdinalIgnoreCase)) {
+				serialPort->Open();
+				serialPort->WriteLine(selectedItem + "~" + lbSumPrice->Text);
+				serialPort->Close();
+				break;
+			}
+		}
 	}
 	private: System::Void dgvPurchaseItem_CellMouseClick(System::Object^ sender, System::Windows::Forms::DataGridViewCellMouseEventArgs^ e) {
 		selectedPurchaseItem = dgvPurchaseItem->CurrentRow->Cells[0]->Value->ToString();
@@ -588,9 +594,16 @@ namespace StoreApp {
 				updatePurchaseTable(listPurchaseItem);
 			}
 		}
-		serialPort->Open();
-		serialPort->WriteLine(selectedItem + "~" + lbSumPrice->Text);
-		serialPort->Close();
+
+		array<String^>^ portNames = SerialPort::GetPortNames();
+		for each (String ^ portName in portNames) {
+			if (portName->Equals("COM6", StringComparison::OrdinalIgnoreCase)) {
+				serialPort->Open();
+				serialPort->WriteLine(selectedItem + "~" + lbSumPrice->Text);
+				serialPort->Close();
+				break;
+			}
+		}
 	}
 	private: System::Void btnPrint_Click(System::Object^ sender, System::EventArgs^ e) {
 		StreamWriter^ sw = gcnew StreamWriter(DateTime::Now.ToString("ddMMyyyy_hhmmss") +  "_Struck.txt");
@@ -627,9 +640,16 @@ namespace StoreApp {
 		listPurchaseItem->Clear();
 		updatePurchaseTable(listPurchaseItem);
 		updateSelected();
-		serialPort->Open();
-		serialPort->WriteLine("0");
-		serialPort->Close();
+
+		array<String^>^ portNames = SerialPort::GetPortNames();
+		for each (String ^ portName in portNames) {
+			if (portName->Equals("COM6", StringComparison::OrdinalIgnoreCase)) {
+				serialPort->Open();
+				serialPort->WriteLine("0");
+				serialPort->Close();
+				break;
+			}
+		}
 	}
 	};
 }

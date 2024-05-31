@@ -416,7 +416,7 @@ namespace StoreApp {
 		}
 
 		// Sort List of Item with Selection Sort
-		for (int i = 0; i < 100; i++) {
+		for (int i = 0; i < listPrintedItem->Count; i++) {
 			int min_idx = i;
 			for (int j = i + 1; j < listPrintedItem->Count; j++) {
 				if (String::Compare(listPrintedItem[min_idx]->name, listPrintedItem[j]->name) == true) {

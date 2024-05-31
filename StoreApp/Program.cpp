@@ -32,6 +32,7 @@ void main(array<String^>^ args) {
 		if (loginForm.switchForm == 2) {
 			StoreApp::WarehouseForm warehouseForm;
 			warehouseForm.ShowDialog();
+
 			if (warehouseForm.exitProgram) {
 				break;
 			}
