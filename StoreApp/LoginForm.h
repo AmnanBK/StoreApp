@@ -285,18 +285,38 @@ namespace StoreApp {
 				if (portName->Equals("COM6", StringComparison::OrdinalIgnoreCase)) {
 					try {
 						serialPort->Open();
-						String^ scanned = serialPort->ReadLine()->Trim();
+						String^ nuid = serialPort->ReadLine()->Trim();
 						UpdateVariableDelegate^ updateDelegate = gcnew UpdateVariableDelegate(this, &LoginForm::UpdateVariable);
-						if (scanned == "179546548") {
-							this->Invoke(updateDelegate, 1);
-						}
-						else if (scanned == "131243748") {
-							this->Invoke(updateDelegate, 2);
-						}
-						else if (scanned == "147992242") {
-							this->Invoke(updateDelegate, 3);
+
+						sqlConn->Open();
+						String^ sqlQuery = "SELECT role FROM users WHERE nuid=@nuid;";
+						MySqlCommand^ sqlComm = gcnew MySqlCommand(sqlQuery, sqlConn);
+						sqlComm->Parameters->AddWithValue("@nuid", nuid);
+
+						MySqlDataReader^ sqlReader = sqlComm->ExecuteReader();
+						if (sqlReader->Read()) {
+							String^ role = sqlReader->GetString(0);
+							if (role == "Admin") {
+								this->Invoke(updateDelegate, 1);
+							}
+							else if (role == "Staff Gudang") {
+								this->Invoke(updateDelegate, 2);
+							}
+							else if (role == "Staff Kasir") {
+								this->Invoke(updateDelegate, 3);
+							}
 						}
 						serialPort->Close();
+
+						//if (scanned == "179546548") {
+						//	this->Invoke(updateDelegate, 1);
+						//}
+						//else if (scanned == "131243748") {
+						//	this->Invoke(updateDelegate, 2);
+						//}
+						//else if (scanned == "147992242") {
+						//	this->Invoke(updateDelegate, 3);
+						//}
 					}
 					catch (Exception^ e) {
 						//MessageBox::Show(e->Message, "Error Read Serial Port", MessageBoxButtons::OK);

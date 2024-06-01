@@ -59,6 +59,7 @@ namespace StoreApp {
 	private: System::Windows::Forms::Button^ btnDelete;
 	private: System::Windows::Forms::Panel^ pnlList;
 	private: System::Windows::Forms::Button^ btnLogout;
+	private: System::Windows::Forms::CheckBox^ cbUseCard;
 
 	private:
 		/// <summary>
@@ -92,6 +93,7 @@ namespace StoreApp {
 			this->btnDelete = (gcnew System::Windows::Forms::Button());
 			this->pnlList = (gcnew System::Windows::Forms::Panel());
 			this->btnLogout = (gcnew System::Windows::Forms::Button());
+			this->cbUseCard = (gcnew System::Windows::Forms::CheckBox());
 			this->pnlTop->SuspendLayout();
 			this->pnlAdd->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pbPassword))->BeginInit();
@@ -130,6 +132,7 @@ namespace StoreApp {
 			// pnlAdd
 			// 
 			this->pnlAdd->BackColor = System::Drawing::Color::Transparent;
+			this->pnlAdd->Controls->Add(this->cbUseCard);
 			this->pnlAdd->Controls->Add(this->lbRole);
 			this->pnlAdd->Controls->Add(this->rbKasir);
 			this->pnlAdd->Controls->Add(this->rbGudang);
@@ -151,7 +154,7 @@ namespace StoreApp {
 			this->lbRole->AutoSize = true;
 			this->lbRole->Font = (gcnew System::Drawing::Font(L"Segoe UI", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->lbRole->Location = System::Drawing::Point(15, 143);
+			this->lbRole->Location = System::Drawing::Point(15, 135);
 			this->lbRole->Name = L"lbRole";
 			this->lbRole->Size = System::Drawing::Size(34, 17);
 			this->lbRole->TabIndex = 11;
@@ -162,7 +165,7 @@ namespace StoreApp {
 			this->rbKasir->AutoSize = true;
 			this->rbKasir->Font = (gcnew System::Drawing::Font(L"Segoe UI", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->rbKasir->Location = System::Drawing::Point(147, 166);
+			this->rbKasir->Location = System::Drawing::Point(147, 158);
 			this->rbKasir->Margin = System::Windows::Forms::Padding(3, 6, 3, 3);
 			this->rbKasir->Name = L"rbKasir";
 			this->rbKasir->Size = System::Drawing::Size(85, 21);
@@ -177,7 +180,7 @@ namespace StoreApp {
 			this->rbGudang->AutoSize = true;
 			this->rbGudang->Font = (gcnew System::Drawing::Font(L"Segoe UI", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->rbGudang->Location = System::Drawing::Point(18, 166);
+			this->rbGudang->Location = System::Drawing::Point(18, 158);
 			this->rbGudang->Margin = System::Windows::Forms::Padding(3, 6, 3, 3);
 			this->rbGudang->Name = L"rbGudang";
 			this->rbGudang->Size = System::Drawing::Size(102, 21);
@@ -209,7 +212,7 @@ namespace StoreApp {
 			this->tbPassword->BorderStyle = System::Windows::Forms::BorderStyle::None;
 			this->tbPassword->Font = (gcnew System::Drawing::Font(L"Segoe UI", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->tbPassword->Location = System::Drawing::Point(47, 109);
+			this->tbPassword->Location = System::Drawing::Point(47, 105);
 			this->tbPassword->Margin = System::Windows::Forms::Padding(3, 6, 18, 3);
 			this->tbPassword->Name = L"tbPassword";
 			this->tbPassword->PasswordChar = '*';
@@ -220,7 +223,7 @@ namespace StoreApp {
 			// 
 			this->pbPassword->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pbPassword.BackgroundImage")));
 			this->pbPassword->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Zoom;
-			this->pbPassword->Location = System::Drawing::Point(18, 109);
+			this->pbPassword->Location = System::Drawing::Point(18, 105);
 			this->pbPassword->Margin = System::Windows::Forms::Padding(3, 6, 6, 3);
 			this->pbPassword->Name = L"pbPassword";
 			this->pbPassword->Size = System::Drawing::Size(20, 20);
@@ -232,7 +235,7 @@ namespace StoreApp {
 			this->lbPassword->AutoSize = true;
 			this->lbPassword->Font = (gcnew System::Drawing::Font(L"Segoe UI", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->lbPassword->Location = System::Drawing::Point(15, 86);
+			this->lbPassword->Location = System::Drawing::Point(15, 82);
 			this->lbPassword->Name = L"lbPassword";
 			this->lbPassword->Size = System::Drawing::Size(64, 17);
 			this->lbPassword->TabIndex = 5;
@@ -345,6 +348,17 @@ namespace StoreApp {
 			this->btnLogout->UseVisualStyleBackColor = true;
 			this->btnLogout->Click += gcnew System::EventHandler(this, &AdminForm::btnLogout_Click);
 			// 
+			// cbUseCard
+			// 
+			this->cbUseCard->AutoSize = true;
+			this->cbUseCard->Location = System::Drawing::Point(18, 186);
+			this->cbUseCard->Name = L"cbUseCard";
+			this->cbUseCard->Size = System::Drawing::Size(81, 17);
+			this->cbUseCard->TabIndex = 12;
+			this->cbUseCard->Text = L"Add ID Cart";
+			this->cbUseCard->UseVisualStyleBackColor = true;
+			this->cbUseCard->CheckedChanged += gcnew System::EventHandler(this, &AdminForm::cbUseCard_CheckedChanged);
+			// 
 			// AdminForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -374,6 +388,7 @@ namespace StoreApp {
 	public: bool exitProgram = false;
 	public: bool logout = false;
 	private: bool dragging;
+	private: bool useIdCard = false;
 	private: Point offset;
 	private: String^ connString = "datasource=127.0.0.1;port=3306;username=root;password=;database=storedb;";
 	private: MySqlConnection^ sqlConn = gcnew MySqlConnection(connString);
@@ -489,5 +504,8 @@ namespace StoreApp {
 
 		refreshDataTable();
 	}
-	};
+	private: System::Void cbUseCard_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
+		useIdCard = true;
+	}
+};
 }

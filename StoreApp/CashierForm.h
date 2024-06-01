@@ -515,9 +515,15 @@ namespace StoreApp {
 		Close();
 	}
 	private: System::Void btnLogout_Click(System::Object^ sender, System::EventArgs^ e) {
-		serialPort->Open();
-		serialPort->WriteLine("0");
-		serialPort->Close();
+		array<String^>^ portNames = SerialPort::GetPortNames();
+		for each (String ^ portName in portNames) {
+			if (portName->Equals("COM6", StringComparison::OrdinalIgnoreCase)) {
+				serialPort->Open();
+				serialPort->WriteLine("0");
+				serialPort->Close();
+				break;
+			}
+		}
 		logout = true;
 		Close();
 	}
