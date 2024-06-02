@@ -130,6 +130,7 @@
     <ClCompile Include="CashierForm.cpp" />
     <ClCompile Include="LoginForm.cpp" />
     <ClCompile Include="Program.cpp" />
+    <ClCompile Include="ScanCardForm.cpp" />
     <ClCompile Include="UpdateItemForm.cpp" />
     <ClCompile Include="WarehouseForm.cpp" />
   </ItemGroup>
@@ -142,6 +143,9 @@
     </ClInclude>
     <ClInclude Include="Item.h" />
     <ClInclude Include="LoginForm.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="ScanCardForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="UpdateItemForm.h">
@@ -160,6 +164,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="LoginForm.resx">
       <DependentUpon>LoginForm.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ScanCardForm.resx">
+      <DependentUpon>ScanCardForm.h</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UpdateItemForm.resx">
       <DependentUpon>UpdateItemForm.h</DependentUpon>

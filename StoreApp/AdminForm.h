@@ -78,6 +78,7 @@ namespace StoreApp {
 			this->pnlTop = (gcnew System::Windows::Forms::Panel());
 			this->btnExit = (gcnew System::Windows::Forms::Button());
 			this->pnlAdd = (gcnew System::Windows::Forms::Panel());
+			this->cbUseCard = (gcnew System::Windows::Forms::CheckBox());
 			this->lbRole = (gcnew System::Windows::Forms::Label());
 			this->rbKasir = (gcnew System::Windows::Forms::RadioButton());
 			this->rbGudang = (gcnew System::Windows::Forms::RadioButton());
@@ -93,7 +94,6 @@ namespace StoreApp {
 			this->btnDelete = (gcnew System::Windows::Forms::Button());
 			this->pnlList = (gcnew System::Windows::Forms::Panel());
 			this->btnLogout = (gcnew System::Windows::Forms::Button());
-			this->cbUseCard = (gcnew System::Windows::Forms::CheckBox());
 			this->pnlTop->SuspendLayout();
 			this->pnlAdd->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pbPassword))->BeginInit();
@@ -148,6 +148,17 @@ namespace StoreApp {
 			this->pnlAdd->Name = L"pnlAdd";
 			this->pnlAdd->Size = System::Drawing::Size(250, 265);
 			this->pnlAdd->TabIndex = 2;
+			// 
+			// cbUseCard
+			// 
+			this->cbUseCard->AutoSize = true;
+			this->cbUseCard->Location = System::Drawing::Point(18, 186);
+			this->cbUseCard->Name = L"cbUseCard";
+			this->cbUseCard->Size = System::Drawing::Size(84, 17);
+			this->cbUseCard->TabIndex = 12;
+			this->cbUseCard->Text = L"Add ID Card";
+			this->cbUseCard->UseVisualStyleBackColor = true;
+			this->cbUseCard->CheckedChanged += gcnew System::EventHandler(this, &AdminForm::cbUseCard_CheckedChanged);
 			// 
 			// lbRole
 			// 
@@ -348,17 +359,6 @@ namespace StoreApp {
 			this->btnLogout->UseVisualStyleBackColor = true;
 			this->btnLogout->Click += gcnew System::EventHandler(this, &AdminForm::btnLogout_Click);
 			// 
-			// cbUseCard
-			// 
-			this->cbUseCard->AutoSize = true;
-			this->cbUseCard->Location = System::Drawing::Point(18, 186);
-			this->cbUseCard->Name = L"cbUseCard";
-			this->cbUseCard->Size = System::Drawing::Size(81, 17);
-			this->cbUseCard->TabIndex = 12;
-			this->cbUseCard->Text = L"Add ID Cart";
-			this->cbUseCard->UseVisualStyleBackColor = true;
-			this->cbUseCard->CheckedChanged += gcnew System::EventHandler(this, &AdminForm::cbUseCard_CheckedChanged);
-			// 
 			// AdminForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -387,8 +387,11 @@ namespace StoreApp {
 #pragma endregion
 	public: bool exitProgram = false;
 	public: bool logout = false;
+	public: bool scanningCard = false;
+	public: String^ sendUsername;
+	public: String^ sendPassword;
+	public: String^ sendRole;
 	private: bool dragging;
-	private: bool useIdCard = false;
 	private: Point offset;
 	private: String^ connString = "datasource=127.0.0.1;port=3306;username=root;password=;database=storedb;";
 	private: MySqlConnection^ sqlConn = gcnew MySqlConnection(connString);
@@ -457,6 +460,15 @@ namespace StoreApp {
 			return;
 		}
 
+		if (cbUseCard->Checked) {
+			sendUsername = username;
+			sendPassword = password;
+			sendRole = role;
+			scanningCard = true;
+			Close();
+			return;
+		}
+
 		for (int i = 0; i < dgvUsers->RowCount; i++) {
 			if (username == dgvUsers->Rows[i]->Cells[0]->Value->ToString()) {
 				MessageBox::Show("Username already exist", "Username Taken", MessageBoxButtons::OK);
@@ -505,7 +517,7 @@ namespace StoreApp {
 		refreshDataTable();
 	}
 	private: System::Void cbUseCard_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
-		useIdCard = true;
+		
 	}
 };
 }

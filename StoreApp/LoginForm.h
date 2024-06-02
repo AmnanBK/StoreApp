@@ -239,7 +239,6 @@ namespace StoreApp {
 			// tmrLogin
 			// 
 			this->tmrLogin->Enabled = true;
-			//this->tmrLogin->Tick += gcnew System::EventHandler(this, &LoginForm::tmrLogin_Tick);
 			// 
 			// LoginForm
 			// 
@@ -267,64 +266,77 @@ namespace StoreApp {
 	public: int switchForm = 0;
 	private: bool dragging;
 	private: Point offset;
+	private: bool stopThread = false;
+	private: bool portAvailable = false;
 	private: String^ connString = "datasource=127.0.0.1;port=3306;username=root;password=;database=storedb;";
 	private: MySqlConnection^ sqlConn = gcnew MySqlConnection(connString);
 	private: SerialPort^ serialPort = gcnew SerialPort("COM6", 115200);
 	private: delegate System::Void UpdateVariableDelegate(int value);
 	private: Thread^ serialReadThread = gcnew Thread(gcnew ThreadStart(this, &LoginForm::ContinuousSerialRead));
 
+	private: System::Void StopThread() {
+		stopThread = true;
+		if (serialReadThread != nullptr && serialReadThread->IsAlive) {
+			serialReadThread->Join();
+		}
+	}
+
 	private: System::Void UpdateVariable(int value) {
 		switchForm = value;
-		Hide();
+		Close();
 	}
 
 	private: System::Void ContinuousSerialRead() {
-		while (switchForm == 0) {
+		while (!stopThread) {
+			portAvailable = false;
 			array<String^>^ portNames = SerialPort::GetPortNames();
 			for each (String ^ portName in portNames) {
 				if (portName->Equals("COM6", StringComparison::OrdinalIgnoreCase)) {
-					try {
-						serialPort->Open();
-						String^ nuid = serialPort->ReadLine()->Trim();
-						UpdateVariableDelegate^ updateDelegate = gcnew UpdateVariableDelegate(this, &LoginForm::UpdateVariable);
-
-						sqlConn->Open();
-						String^ sqlQuery = "SELECT role FROM users WHERE nuid=@nuid;";
-						MySqlCommand^ sqlComm = gcnew MySqlCommand(sqlQuery, sqlConn);
-						sqlComm->Parameters->AddWithValue("@nuid", nuid);
-
-						MySqlDataReader^ sqlReader = sqlComm->ExecuteReader();
-						if (sqlReader->Read()) {
-							String^ role = sqlReader->GetString(0);
-							if (role == "Admin") {
-								this->Invoke(updateDelegate, 1);
-							}
-							else if (role == "Staff Gudang") {
-								this->Invoke(updateDelegate, 2);
-							}
-							else if (role == "Staff Kasir") {
-								this->Invoke(updateDelegate, 3);
-							}
-						}
-						serialPort->Close();
-
-						//if (scanned == "179546548") {
-						//	this->Invoke(updateDelegate, 1);
-						//}
-						//else if (scanned == "131243748") {
-						//	this->Invoke(updateDelegate, 2);
-						//}
-						//else if (scanned == "147992242") {
-						//	this->Invoke(updateDelegate, 3);
-						//}
-					}
-					catch (Exception^ e) {
-						//MessageBox::Show(e->Message, "Error Read Serial Port", MessageBoxButtons::OK);
-						continue;
-					}
-					Thread::Sleep(100);
+					portAvailable = true;
+					break;
 				}
 			}
+			if (portAvailable) {
+				try {
+					serialPort->Open();
+					String^ nuid = serialPort->ReadLine()->Trim();
+					UpdateVariableDelegate^ updateDelegate = gcnew UpdateVariableDelegate(this, &LoginForm::UpdateVariable);
+
+					sqlConn->Open();
+					String^ sqlQuery = "SELECT role FROM users WHERE nuid=@nuid;";
+					MySqlCommand^ sqlComm = gcnew MySqlCommand(sqlQuery, sqlConn);
+					sqlComm->Parameters->AddWithValue("@nuid", nuid);
+
+					MySqlDataReader^ sqlReader = sqlComm->ExecuteReader();
+					if (sqlReader->Read()) {
+						String^ role = sqlReader->GetString(0);
+						if (role == "Admin") {
+							this->Invoke(updateDelegate, 1);
+						}
+						else if (role == "Staff Gudang") {
+							this->Invoke(updateDelegate, 2);
+						}
+						else if (role == "Staff Kasir") {
+							this->Invoke(updateDelegate, 3);
+						}
+						sqlConn->Close();
+						serialPort->Close();
+						StopThread();
+					}
+					else {
+						serialPort->Close();
+						sqlConn->Close();
+						continue;
+					}
+				}
+				catch (Exception^ e) {
+					continue;
+				}
+			}
+			if (stopThread) {
+				break;
+			}
+			Thread::Sleep(100);
 		}
 	}
 
@@ -387,7 +399,8 @@ namespace StoreApp {
 			}
 			sqlConn->Close();
 			serialPort->Close();
-			Hide();
+			StopThread();
+			Close();
 		}
 		catch (Exception^ e) {
 			MessageBox::Show(e->Message, "Failed to Connect", MessageBoxButtons::OK);
@@ -398,6 +411,5 @@ namespace StoreApp {
 		serialReadThread->IsBackground = true;
 		serialReadThread->Start();
 	}
-
 	};
 }

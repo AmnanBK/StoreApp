@@ -475,9 +475,25 @@ namespace StoreApp {
 		int sum = 0;
 		for (int i = 0; i < data->Count; i++) {
 			dgvPurchaseItem->Rows->Add(data[i]->name, data[i]->qty);
-			sum += data[i]->qty * data[i]->price;
+			//sum += data[i]->qty * data[i]->price;
 		}
+		sum = calculateSumPrice(data->Count - 1, data);
 		lbSumPrice->Text = formatCurrency(sum);
+	}
+
+	private: System::Int32 calculateSumPrice(int index, List<Item^>^ data) {
+		if (index < 0) {
+			return 0;
+		}
+
+		/*if (index >= data->Count) {
+			throw gcnew System::ArgumentOutOfRangeException("index", "Index was out of range.");
+		}*/
+
+		Item^ item = data[index];
+		int sum = item->qty * item->price;
+
+		return sum + calculateSumPrice(index - 1, data);
 	}
 
 	private: System::String^ formatCurrency(int data) {
@@ -511,6 +527,15 @@ namespace StoreApp {
 	}
 
 	private: System::Void btnExit_Click(System::Object^ sender, System::EventArgs^ e) {
+		array<String^>^ portNames = SerialPort::GetPortNames();
+		for each (String ^ portName in portNames) {
+			if (portName->Equals("COM6", StringComparison::OrdinalIgnoreCase)) {
+				serialPort->Open();
+				serialPort->WriteLine("0");
+				serialPort->Close();
+				break;
+			}
+		}
 		exitProgram = true;
 		Close();
 	}
@@ -612,7 +637,7 @@ namespace StoreApp {
 		}
 	}
 	private: System::Void btnPrint_Click(System::Object^ sender, System::EventArgs^ e) {
-		StreamWriter^ sw = gcnew StreamWriter(DateTime::Now.ToString("ddMMyyyy_hhmmss") +  "_Struck.txt");
+		StreamWriter^ sw = gcnew StreamWriter(DateTime::Now.ToString("ddMMyyyy_hhmmss") + "_Struck.txt");
 		sw->WriteLine("------------------------------------");
 		sw->WriteLine("####        TOKO FLOVER         ####");
 		sw->WriteLine("------------------------------------");
@@ -634,7 +659,7 @@ namespace StoreApp {
 				String^ sqlQuery = "UPDATE items SET stock=(stock-@stock) WHERE name=@currentName;";
 				MySqlCommand sqlComm(sqlQuery, sqlConn);
 				sqlComm.Parameters->AddWithValue("@stock", listPurchaseItem[i]->qty);
-				sqlComm.Parameters->AddWithValue("@currentName", listPurchaseItem[i] ->name);
+				sqlComm.Parameters->AddWithValue("@currentName", listPurchaseItem[i]->name);
 				sqlComm.ExecuteNonQuery();
 				sqlConn->Close();
 			}
