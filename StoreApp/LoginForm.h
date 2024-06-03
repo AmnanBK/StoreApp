@@ -143,6 +143,7 @@ namespace StoreApp {
 			// 
 			// btnLogin
 			// 
+			this->btnLogin->Enabled = false;
 			this->btnLogin->FlatAppearance->MouseDownBackColor = System::Drawing::Color::DarkGray;
 			this->btnLogin->FlatAppearance->MouseOverBackColor = System::Drawing::Color::LightGray;
 			this->btnLogin->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
@@ -168,6 +169,7 @@ namespace StoreApp {
 			this->tbPassword->PasswordChar = '*';
 			this->tbPassword->Size = System::Drawing::Size(140, 18);
 			this->tbPassword->TabIndex = 7;
+			this->tbPassword->TextChanged += gcnew System::EventHandler(this, &LoginForm::tbPassword_TextChanged);
 			// 
 			// pbPassword
 			// 
@@ -202,6 +204,7 @@ namespace StoreApp {
 			this->tbUsername->Name = L"tbUsername";
 			this->tbUsername->Size = System::Drawing::Size(140, 18);
 			this->tbUsername->TabIndex = 4;
+			this->tbUsername->TextChanged += gcnew System::EventHandler(this, &LoginForm::tbUsername_TextChanged);
 			// 
 			// pbUsername
 			// 
@@ -264,6 +267,8 @@ namespace StoreApp {
 #pragma endregion
 	public: bool exitProgram = false;
 	public: int switchForm = 0;
+	private: int usernameLength = 0;
+	private: int passwordLength = 0;
 	private: bool dragging;
 	private: Point offset;
 	private: bool stopThread = false;
@@ -366,7 +371,7 @@ namespace StoreApp {
 		String^ username = tbUsername->Text;
 		String^ password = tbPassword->Text;
 
-		if (username->Length == 0 || password->Length == 0) {
+		if (username->Length < 5 || password->Length < 8) {
 			MessageBox::Show("Please fill username and password", "Username or Password Empty", MessageBoxButtons::OK);
 			return;
 		}
@@ -410,6 +415,24 @@ namespace StoreApp {
 	private: System::Void LoginForm_Load(System::Object^ sender, System::EventArgs^ e) {
 		serialReadThread->IsBackground = true;
 		serialReadThread->Start();
+	}
+	private: System::Void tbUsername_TextChanged(System::Object^ sender, System::EventArgs^ e) {
+		usernameLength = tbUsername->Text->Length;
+		if (usernameLength >= 5 && passwordLength >= 8) {
+			btnLogin->Enabled = true;
+		}
+		else {
+			btnLogin->Enabled = false;
+		}
+	}
+	private: System::Void tbPassword_TextChanged(System::Object^ sender, System::EventArgs^ e) {
+		passwordLength = tbPassword->Text->Length;
+		if (usernameLength >= 5 && passwordLength >= 8) {
+			btnLogin->Enabled = true;
+		}
+		else {
+			btnLogin->Enabled = false;
+		}
 	}
 	};
 }

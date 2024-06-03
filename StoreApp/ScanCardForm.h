@@ -214,7 +214,8 @@ namespace StoreApp {
 	}
 
 	private: System::Void btnCancel_Click(System::Object^ sender, System::EventArgs^ e) {
-		StopThread();
+		MessageBox::Show("CHsdfsdINT", "TEST", MessageBoxButtons::OK);
+		stopThread == false;
 		Close();
 	}
 	private: System::Void ScanCardForm_Load(System::Object^ sender, System::EventArgs^ e) {
@@ -222,7 +223,7 @@ namespace StoreApp {
 		serialReadThreadV2->Start();
 	}
 	private: System::Void ScanCardForm_FormClosing(System::Object^ sender, System::Windows::Forms::FormClosingEventArgs^ e) {
-		StopThread();
+		//StopThread();
 	}
-};
+	};
 }

@@ -459,6 +459,10 @@ namespace StoreApp {
 			MessageBox::Show("Please fill the data", "Username or Password Empty", MessageBoxButtons::OK);
 			return;
 		}
+		if (username->Length < 5  || password->Length < 8) {
+			MessageBox::Show("Usesrname or lengt", "Username or Password Empty", MessageBoxButtons::OK);
+			return;
+		}
 
 		if (cbUseCard->Checked) {
 			sendUsername = username;

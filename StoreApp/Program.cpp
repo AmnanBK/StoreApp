@@ -23,7 +23,7 @@ void main(array<String^>^ args) {
 		if (loginForm.switchForm == 1) {
 			while (loginForm.switchForm == 1) {
 				StoreApp::AdminForm adminForm;
-				loginForm.StartPosition = FormStartPosition::CenterScreen;
+				adminForm.StartPosition = FormStartPosition::CenterScreen;
 				adminForm.ShowDialog();
 				if (adminForm.exitProgram) {
 					statusMain = false;
